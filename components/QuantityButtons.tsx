@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { HiMinus, HiPlus } from "react-icons/hi2";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
-import { Product } from "@/types/product";
+import { Product } from "@/types";
 import useCartStore from "@/store";
 
 interface Props {
@@ -42,7 +42,7 @@ const QuantityButtons = ({ product, className, borderStyle }: Props) => {
       >
         <HiMinus />
       </Button>
-      <span className="font-semibold w-8 text-center text-darkColor">
+      <span className="font-semibold w-8 text-center text-foreground">
         {itemCount}
       </span>
       <Button

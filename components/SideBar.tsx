@@ -19,7 +19,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items }) => {
 
   return (
     <div
-      className={`fixed inset-y-0 left-0 z-50 w-full bg-darkColor/50 shadow-xl transform ${
+      className={`fixed inset-y-0 left-0 z-50 w-full bg-foreground/50 shadow-xl transform ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       } transition-transform ease-in-out duration-300`}
     >
@@ -28,23 +28,23 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items }) => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 0.3 }}
         ref={sidebarRef}
-        className="min-w-72 max-w-96 bg-darkColor h-full text-primary-foreground p-10 border-r border-r-hoverColor/30 flex flex-col gap-6"
+        className="min-w-72 max-w-96 bg-muted h-full text-primary-foreground p-10 border-r border-r-hoverColor/30 flex flex-col gap-6"
       >
         <div className="flex items-center justify-between">
-          <Logo className="text-white">Desi Drops</Logo>
+          <Logo className="text-foreground">Desi Drops</Logo>
           <button
             onClick={onClose}
-            className="hover:text-red-500 hoverEffect cursor-pointer text-white"
+            className="hover:text-red-500 hoverEffect cursor-pointer text-foreground"
           >
             <X />
           </button>
         </div>
-        <div className="flex flex-col gap-3.5 text-base font-semibold tracking-wide text-zinc-400">
+        <div className="flex flex-col gap-3.5 text-base font-semibold tracking-wide text-foreground/50">
           <Link
             onClick={onClose}
             href={"/"}
-            className={`hover:text-white hoverEffect ${
-              pathname === `/` && "text-white"
+            className={`hover:text-foreground hoverEffect ${
+              pathname === `/` && "text-foreground"
             }`}
           >
             Home
@@ -54,8 +54,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items }) => {
               onClick={onClose}
               key={item}
               href={`/${item}`}
-              className={`hover:text-white hoverEffect ${
-                pathname === `/${item}` && "text-white"
+              className={`hover:text-foreground hoverEffect ${
+                pathname === `/${item}` && "text-foreground"
               }`}
             >
               {item}

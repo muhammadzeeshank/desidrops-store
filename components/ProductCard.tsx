@@ -2,7 +2,7 @@ import Image from "next/image";
 import React from "react";
 import Link from "next/link";
 import Title from "./Title";
-import { Product } from "@/types/product";
+import { Product } from "@/types";
 import AddToCartButton from "./AddToCartButton";
 import PriceView from "./PriceView";
 
@@ -13,7 +13,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         {product?.images && (
           <Link href={`/product/${product?.slug}`}>
             <Image
-              src={product.images[0]}
+              src={product.images[0].url}
               alt="productImage"
               width={500}
               height={500}

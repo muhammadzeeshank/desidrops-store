@@ -1,4 +1,4 @@
-import { Product } from "@/types/product";
+import { Product } from "@/types";
 
 export const dummyProducts: Product[] = [
   {
@@ -9,8 +9,14 @@ export const dummyProducts: Product[] = [
       "Our 100% organic canola oil is extracted using cold-press technology to retain maximum nutrients. Ideal for frying, baking, or drizzling on salads.",
     slug: "organic-canola-oil",
     images: [
-      "https://assets.iflscience.com/assets/articleNo/71323/aImg/71678/canola-oil-o.webp",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1kY0GpkQtcjoEC9Nbh82iX7FRDr7LYTfcQg&s",
+      {
+        key: "1",
+        url: "https://assets.iflscience.com/assets/articleNo/71323/aImg/71678/canola-oil-o.webp",
+      },
+      {
+        key: "2",
+        url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1kY0GpkQtcjoEC9Nbh82iX7FRDr7LYTfcQg&s",
+      },
     ],
     price: 1200,
     discount: 10,
@@ -27,7 +33,10 @@ export const dummyProducts: Product[] = [
       "Our organic desi ghee is slow-cooked to preserve rich aroma and essential nutrients. Perfect for traditional cooking and daily use.",
     slug: "organic-desi-ghee",
     images: [
-      "https://cdn.shopaccino.com/refresh/articles/organic-desi-ghee-426160_l.jpg?v=531",
+      {
+        url: "https://cdn.shopaccino.com/refresh/articles/organic-desi-ghee-426160_l.jpg?v=531",
+        key: "1",
+      },
     ],
     price: 2200,
     discount: 15,

@@ -4,11 +4,15 @@ export interface Product {
   intro: string;
   description?: string;
   slug: string;
-  images: string[]; // URLs of images
+  images: ImageData[]; // URLs of images
   price: number;
   discount?: number;
   stock: number;
   createdAt: Date;
   updatedAt: Date;
   categoryId?: string;
+}
+export interface ImageData {
+  url: string;
+  key: string;
 }

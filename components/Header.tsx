@@ -25,7 +25,7 @@ const Header = async () => {
   // //   const categories = await getAllCategories(3);
 
   return (
-    <header className="bg-white dark:bg-gray-900 sticky top-0 z-50 border-b border-b-gray-200 py-5">
+    <header className="bg-background sticky top-0 z-50 border-b  py-5">
       <Container className="flex items-center justify-between ">
         <HeaderMenu />
         <div className="w-auto md:w-1/3 flex items-center justify-center gap-2.5">

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Loader2 } from "lucide-react";
 import ProductCard from "./ProductCard";
-import { Product } from "@/types/product";
+import { Product } from "@/types";
 import { dummyProducts } from "@/data/dummydata";
 
 const ProductGrid = () => {

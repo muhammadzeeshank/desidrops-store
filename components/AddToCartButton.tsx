@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import PriceFormatter from "./PriceFormatter";
 import QuantityButtons from "./QuantityButtons";
-import { Product } from "@/types/product";
+import { Product } from "@/types";
 import useCartStore from "@/store";
 
 interface Props {
