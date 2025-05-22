@@ -6,8 +6,8 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import PriceFormatter from "./PriceFormatter";
 import QuantityButtons from "./QuantityButtons";
-import { Product } from "@/types";
 import useCartStore from "@/store";
+import { Product } from "@/sanity.types";
 
 interface Props {
   product: Product;
@@ -18,7 +18,7 @@ const AddToCartButton = ({ product, className }: Props) => {
   const { addItem, getItemCount } = useCartStore();
   const [isClient, setIsClient] = useState(false);
 
-  const itemCount = getItemCount(product?.id);
+  const itemCount = getItemCount(product?._id);
 
   const isOutOfStock = product?.stock === 0;
 

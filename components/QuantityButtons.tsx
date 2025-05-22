@@ -3,8 +3,8 @@ import { Button } from "./ui/button";
 import { HiMinus, HiPlus } from "react-icons/hi2";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
-import { Product } from "@/types";
 import useCartStore from "@/store";
+import { Product } from "@/sanity.types";
 
 interface Props {
   product: Product;
@@ -14,11 +14,11 @@ interface Props {
 
 const QuantityButtons = ({ product, className, borderStyle }: Props) => {
   const { addItem, removeItem, getItemCount } = useCartStore();
-  const itemCount = getItemCount(product?.id);
+  const itemCount = getItemCount(product?._id);
   const isOutOfStock = product?.stock === 0;
 
   const handleRemoveProduct = () => {
-    removeItem(product?.id);
+    removeItem(product?._id);
     if (itemCount > 1) {
       toast.success("Quantity Decreased successfully!");
     } else {

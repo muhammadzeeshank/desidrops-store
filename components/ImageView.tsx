@@ -3,16 +3,33 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ImageData } from "@/types";
+import { urlFor } from "@/sanity/lib/image";
+import {
+  internalGroqTypeReferenceTo,
+  SanityImageCrop,
+  SanityImageHotspot,
+} from "@/sanity.types";
 interface Props {
-  images: ImageData[];
+  images?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
 }
-const ImageView = ({ images }: Props) => {
+const ImageView = ({ images = [] }: Props) => {
   const [active, setActive] = useState(images[0]);
   return (
     <div className="w-full md:w-1/2 space-y-2 md:space-y-4">
       <AnimatePresence mode="wait">
         <motion.div
-          key={active?.key}
+          key={active?._key}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -20,7 +37,7 @@ const ImageView = ({ images }: Props) => {
           className="w-full max-h-[550px] min-h-[450px] border border-foreground/20 rounded-md group overflow-hidden"
         >
           <Image
-            src={active.url}
+            src={urlFor(active).url()}
             alt="productImage"
             width={700}
             height={700}
@@ -32,15 +49,15 @@ const ImageView = ({ images }: Props) => {
       <div className="grid grid-cols-6 gap-2 h-20 md:h-28">
         {images.map((image) => (
           <button
-            key={image.key}
+            key={image._key}
             onClick={() => setActive(image)}
             className={`border rounded-md overflow-hidden hover:cursor-pointer ${
-              active.key === image.key ? "ring-1 ring-foreground" : ""
+              active._key === image._key ? "ring-1 ring-foreground" : ""
             }`}
           >
             <Image
-              src={image.url}
-              alt={`Thumbnail ${image.key}`}
+              src={urlFor(image).url()}
+              alt={`Thumbnail ${image._key}`}
               width={100}
               height={100}
               className="w-full h-auto object-contain"

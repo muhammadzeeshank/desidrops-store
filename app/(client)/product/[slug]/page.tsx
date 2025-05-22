@@ -2,13 +2,10 @@ import AddToCartButton from "@/components/AddToCartButton";
 import Container from "@/components/Container";
 import ImageView from "@/components/ImageView";
 import PriceView from "@/components/PriceView";
-import { dummyProducts } from "@/data/dummydata";
-import { Heart } from "lucide-react";
+import { getProductBySlug } from "@/sanity/helpers";
 import { notFound } from "next/navigation";
-import React from "react";
 import { FaRegQuestionCircle } from "react-icons/fa";
 import { FiShare2 } from "react-icons/fi";
-import { RxBorderSplit } from "react-icons/rx";
 import { TbTruckDelivery } from "react-icons/tb";
 
 const ProductPage = async ({
@@ -17,7 +14,8 @@ const ProductPage = async ({
   params: Promise<{ slug: string }>;
 }) => {
   const { slug } = await params;
-  const product = dummyProducts.find(product => product.slug === slug);
+  const product = await getProductBySlug(slug);
+
 
   if (!product) {
     return notFound();
@@ -37,7 +35,7 @@ const ProductPage = async ({
             />
           </div>
           {product?.stock && (
-            <p className="bg-green-100 w-24 text-center text-green-600 text-sm py-2.5 font-semibold rounded-lg">
+            <p className="bg-green-100 dark:bg-green-900 w-24 text-center text-green-900 dark:text-green-100 text-sm py-2.5 font-semibold rounded-lg">
               In Stock
             </p>
           )}
@@ -62,7 +60,7 @@ const ProductPage = async ({
             </div>
             <div className="flex items-center gap-2 text-sm text-foreground hover:text-red-600 hoverEffect">
               <TbTruckDelivery className="text-lg" />
-              <p>Delivery & Return</p>
+              <p>Cash On Delivery</p>
             </div>
             <div className="flex items-center gap-2 text-sm text-foreground hover:text-red-600 hoverEffect">
               <FiShare2 className="text-lg" />

@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Product } from "./types";
+import { Product } from "./sanity.types";
 
-interface CartItem {
+export interface CartItem {
   product: Product;
   quantity: number;
 }
@@ -26,7 +26,7 @@ const useCartStore = create<CartState>()(
       addItem: (product) =>
         set((state) => {
           const existingItem = state.items.find(
-            (item) => item.product.id === product.id
+            (item) => item.product._id === product._id
           );
           if (existingItem) {
             existingItem.quantity++;
@@ -38,7 +38,7 @@ const useCartStore = create<CartState>()(
       removeItem: (productId) =>
         set((state) => ({
           items: state.items.reduce((acc, item) => {
-            if (item.product.id === productId) {
+            if (item.product._id === productId) {
               if (item.quantity > 1) {
                 acc.push({ ...item, quantity: item.quantity - 1 });
               }
@@ -50,7 +50,7 @@ const useCartStore = create<CartState>()(
         })),
       deleteCartProduct: (productId) =>
         set((state) => ({
-          items: state.items.filter(({ product }) => product?.id !== productId),
+          items: state.items.filter(({ product }) => product?._id !== productId),
         })),
       resetCart: () => set({ items: [] }),
       getTotalPrice: () => {
@@ -68,7 +68,7 @@ const useCartStore = create<CartState>()(
         }, 0);
       },
       getItemCount: (productId) => {
-        const item = get().items.find((item) => item.product.id === productId);
+        const item = get().items.find((item) => item.product._id === productId);
         return item ? item.quantity : 0;
       },
       getGroupedItems: () => get().items,

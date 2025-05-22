@@ -3,19 +3,21 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Loader2 } from "lucide-react";
 import ProductCard from "./ProductCard";
-import { Product } from "@/types";
-import { dummyProducts } from "@/data/dummydata";
+import { client } from "@/sanity/lib/client";
+import { Product } from "@/sanity.types";
 
 const ProductGrid = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
+  const query = `*[_type == "product"] | order(name asc)`;
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        // const response = await client.fetch(query, params);
-        setProducts(dummyProducts);
+        const response = await client.fetch(query);
+        console.log(response)
+        setProducts(response);
       } catch (error) {
         console.log("Product fetching Error", error);
       } finally {
@@ -38,14 +40,14 @@ const ProductGrid = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2  gap-8">
           <>
             {products?.map((product) => (
-              <AnimatePresence key={product?.id}>
+              <AnimatePresence key={product?._id}>
                 <motion.div
                   layout
                   initial={{ opacity: 0.2 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 >
-                  <ProductCard key={product?.id} product={product} />
+                  <ProductCard key={product?._id} product={product} />
                 </motion.div>
               </AnimatePresence>
             ))}

@@ -1,28 +1,28 @@
 "use client";
+import {
+  createCheckoutSession,
+  Metadata,
+} from "@/actions/createCheckoutSession";
 import Container from "@/components/Container";
+import EmptyCart from "@/components/EmptyCart";
+import Loading from "@/components/Loading";
 import PriceFormatter from "@/components/PriceFormatter";
 import QuantityButtons from "@/components/QuantityButtons";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import useCartStore from "@/store";
-import { useAuth, useUser } from "@clerk/nextjs";
-import { Heart, ShoppingBag, Trash } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-// import {
-//   createCheckoutSession,
-//   Metadata,
-// } from "@/actions/createCheckoutSession";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import Loading from "@/components/Loading";
-import EmptyCart from "@/components/EmptyCart";
+import { urlFor } from "@/sanity/lib/image";
+import useCartStore from "@/store";
+import { useAuth, useUser } from "@clerk/nextjs";
+import { Heart, ShoppingBag, Trash } from "lucide-react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const CartPage = () => {
   const {
@@ -56,16 +56,16 @@ const CartPage = () => {
   const handleCheckout = async () => {
     setLoading(true);
     try {
-      // const metadata: Metadata = {
-      //   orderNumber: crypto.randomUUID(),
-      //   customerName: user?.fullName ?? "Unknown",
-      //   customerEmail: user?.emailAddresses[0]?.emailAddress ?? "Unknown",
-      //   clerkUserId: user!.id,
-      // };
-      // const checkoutUrl = await createCheckoutSession(groupedItems, metadata);
-      // if (checkoutUrl) {
-      //   window.location.href = checkoutUrl;
-      // }
+      const metadata: Metadata = {
+        orderNumber: crypto.randomUUID(),
+        customerName: user?.fullName ?? "Unknown",
+        customerEmail: user?.emailAddresses[0]?.emailAddress ?? "Unknown",
+        clerkUserId: user!.id,
+      };
+      const checkoutUrl = await createCheckoutSession(groupedItems, metadata);
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
+      }
     } catch (error) {
       console.error("Error creating checkout session:", error);
     } finally {
@@ -91,17 +91,17 @@ const CartPage = () => {
               <div className="lg:col-span-2 rounded-lg">
                 <div className="border bg-background rounded-md">
                   {groupedItems?.map(({ product }) => {
-                    const itemCount = getItemCount(product?.id);
+                    const itemCount = getItemCount(product?._id);
                     return (
                       <div
-                        key={product?.id}
+                        key={product?._id}
                         className="border-b p-2.5 last:border-b-0 flex items-center justify-between gap-5"
                       >
                         <div className="flex flex-1 items-start gap-2 h-36 md:h-44">
                           {product?.images && (
                             <div className="border p-0.5 md:p-1 mr-2 rounded-md overflow-hidden group">
                               <Image
-                                src={product.images[0].url}
+                                src={urlFor(product.images[0]).url()}
                                 alt="productImage"
                                 width={500}
                                 height={500}
@@ -145,7 +145,7 @@ const CartPage = () => {
                                   <TooltipTrigger>
                                     <Trash
                                       onClick={() =>
-                                        handleDeleteProduct(product?.id)
+                                        handleDeleteProduct(product?._id)
                                       }
                                       className="w-4 h-4 md:w-5 md:h-5 mr-1 text-foreground/50 hover:text-red-600 hoverEffect"
                                     />

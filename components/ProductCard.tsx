@@ -2,18 +2,19 @@ import Image from "next/image";
 import React from "react";
 import Link from "next/link";
 import Title from "./Title";
-import { Product } from "@/types";
 import AddToCartButton from "./AddToCartButton";
 import PriceView from "./PriceView";
+import { Product } from "@/sanity.types";
+import { urlFor } from "@/sanity/lib/image";
 
 const ProductCard = ({ product }: { product: Product }) => {
   return (
     <div className="rounded-lg overflow-hidden group text-sm">
       <div className="overflow-hidden relative bg-gradient-to-r from-zinc-200 via-zinc-300 to-zinc-200 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-800">
         {product?.images && (
-          <Link href={`/product/${product?.slug}`}>
+          <Link href={`/product/${product?.slug?.current}`}>
             <Image
-              src={product.images[0].url}
+              src={urlFor(product.images[0]).url()}
               alt="productImage"
               width={500}
               height={500}
