@@ -21,6 +21,7 @@ import useCartStore from "@/store";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { Heart, ShoppingBag, Trash } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -37,6 +38,7 @@ const CartPage = () => {
   const groupedItems = useCartStore((state) => state.getGroupedItems());
   const { isSignedIn } = useAuth();
   const { user } = useUser();
+  const router = useRouter();
 
   useEffect(() => {
     setIsClient(true);
@@ -44,7 +46,6 @@ const CartPage = () => {
   if (!isClient) {
     return <Loading />;
   }
-
   const handleResetCart = () => {
     const confirmed = window.confirm("Are you sure to reset your Cart?");
     if (confirmed) {
@@ -54,23 +55,7 @@ const CartPage = () => {
   };
 
   const handleCheckout = async () => {
-    setLoading(true);
-    try {
-      const metadata: Metadata = {
-        orderNumber: crypto.randomUUID(),
-        customerName: user?.fullName ?? "Unknown",
-        customerEmail: user?.emailAddresses[0]?.emailAddress ?? "Unknown",
-        clerkUserId: user!.id,
-      };
-      const checkoutUrl = await createCheckoutSession(groupedItems, metadata);
-      if (checkoutUrl) {
-        window.location.href = checkoutUrl;
-      }
-    } catch (error) {
-      console.error("Error creating checkout session:", error);
-    } finally {
-      setLoading(false);
-    }
+    router.push("/checkout");
   };
 
   const handleDeleteProduct = (id: string) => {
