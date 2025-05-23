@@ -6,7 +6,7 @@ import {
 } from "@/actions/createCheckoutSession";
 import CheckoutForm, {
   CheckoutFormType,
-  ChildFormHandle,
+  CheckoutFormRef,
 } from "@/components/CheckoutForm";
 import Container from "@/components/Container";
 import PriceFormatter from "@/components/PriceFormatter";
@@ -30,6 +30,7 @@ function CheckoutPage() {
   const groupedItems = useCartStore((state) => state.getGroupedItems());
   const { isSignedIn } = useAuth();
   const { user } = useUser();
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const handleSubmit = (data: CheckoutFormType) => {
     console.log("Parent received data:", data);
@@ -58,8 +59,10 @@ function CheckoutPage() {
       setLoading(false);
     }
   };
-  const formRef = useRef<ChildFormHandle>(null);
-
+  const formRef = useRef<CheckoutFormRef>(null);
+  const handleValidityChange = (valid: boolean) => {
+    setIsFormValid(valid);
+  };
   return (
     <div className="bg-muted pb-52 md:pb-10 flex-grow">
       <Container>
@@ -73,10 +76,15 @@ function CheckoutPage() {
             <div className="lg:col-span-2 rounded-lg">
               <div className="border bg-background rounded-md">
                 <div className="p-6">
-                  <CheckoutForm ref={formRef} onSubmit={handleSubmit} />
+                  <CheckoutForm
+                    ref={formRef}
+                    onSubmit={handleSubmit}
+                    onValidityChange={handleValidityChange}
+                  />
                   <Button
                     onClick={() => formRef.current?.submit()}
                     className="w-full cursor-pointer font-semibold tracking-wide"
+                    disabled={!isFormValid}
                   >
                     {loading ? "Processing" : "Place Order"}
                   </Button>

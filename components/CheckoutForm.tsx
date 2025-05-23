@@ -1,5 +1,11 @@
 "use client";
-import React, { forwardRef, useImperativeHandle, useRef } from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -22,22 +28,29 @@ import { Textarea } from "./ui/textarea";
 import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
 import { useForm } from "react-hook-form";
+import { PhoneInput } from "./PhoneInput";
+import { isValidPhoneNumber } from "react-phone-number-input";
 const formSchema = z.object({
   "text-0": z.string(),
-  "email": z.string(),
+  email: z.string().email("Invalid email address"),
   "text-1": z.string(),
-  "country": z.string(),
-  "text-input-0": z.string(),
-  "text-input-1": z.string(),
-  "textarea-0": z.string(),
-  "select-0": z.string(),
-  "select-1": z.string(),
-  "tel-input-0": z.string(),
+  country: z.string(),
+  firstname: z.string().min(1, "Required"),
+  lastname: z.string().min(1, "Required"),
+  address: z.string().min(1, "Required"),
+  city: z.string().min(1, "Required"),
+  postalcode: z.string(),
+  phone: z
+    .string()
+    .min(1, "Required")
+    .refine((val) => isValidPhoneNumber(val || ""), {
+      message: "Invalid phone number",
+    }),
   "text-3": z.string(),
   "text-4": z.string(),
 });
 
-export type ChildFormHandle = {
+export type CheckoutFormRef = {
   submit: () => void;
 };
 
@@ -45,298 +58,303 @@ export type CheckoutFormType = z.infer<typeof formSchema>;
 
 type Props = {
   onSubmit: (data: CheckoutFormType) => void;
+  onValidityChange?: (isValid: boolean) => void;
 };
 
-const CheckoutForm = forwardRef<ChildFormHandle, Props>(({ onSubmit }, ref) => {
-  const formRef = useRef<HTMLFormElement>(null);
+const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
+  ({ onSubmit, onValidityChange }, ref) => {
+    const formRef = useRef<HTMLFormElement>(null);
 
-  const form = useForm<CheckoutFormType>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      "text-0": "",
-      "email": "",
-      "text-1": "",
-      "country": "pakistan",
-      "text-input-0": "",
-      "text-input-1": "",
-      "textarea-0": "",
-      "select-0": "",
-      "select-1": "",
-      "tel-input-0": "",
-      "text-3": "",
-      "text-4": "",
-    },
-  });
+    const form = useForm<CheckoutFormType>({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        "text-0": "",
+        email: "",
+        "text-1": "",
+        country: "pakistan",
+        firstname: "",
+        lastname: "",
+        address: "",
+        city: "",
+        postalcode: "",
+        phone: "",
+        "text-3": "",
+        "text-4": "",
+      },
+      mode: "onChange",
+    });
 
-  function onReset() {
-    form.reset();
-    form.clearErrors();
-  }
-  // Expose submit function to parent
-  useImperativeHandle(ref, () => ({
-    submit: () => form.handleSubmit(onSubmit)(),
-  }));
-  return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        onReset={onReset}
-        className="space-y-8 @container"
-      >
-        <div className="grid grid-cols-12 gap-4">
-          <div
-            key="text-0"
-            id="text-0"
-            className=" col-span-12 @3xl:col-span-12 col-start-auto"
-          >
-            <p className="not-first:mt-6">Contact Information</p>
-          </div>
+    function onReset() {
+      form.reset();
+      form.clearErrors();
+    }
 
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem className="col-span-12 @3xl:col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                <FormLabel className="flex shrink-0">Email</FormLabel>
+    const [isValid, setIsValid] = useState(false);
 
-                <div className="w-full">
-                  <FormControl>
-                    <div className="relative w-full">
-                      <Input
-                        key="email"
+    useEffect(() => {
+      const subscription = form.watch(() => {
+        onValidityChange?.(form.formState.isValid);
+      });
+      return () => subscription.unsubscribe();
+    }, [form, onValidityChange]);
+
+    // Expose submit function to parent
+    useImperativeHandle(ref, () => ({
+      submit: () => form.handleSubmit(onSubmit)(),
+    }));
+    return (
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          onReset={onReset}
+          className="space-y-8 @container"
+        >
+          <div className="grid grid-cols-12 gap-4">
+            <div
+              className=" col-span-12 @3xl:col-span-12 col-start-auto"
+            >
+              <p className="not-first:mt-6 text-xl font-medium">Contact Information</p>
+            </div>
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className="col-span-12 @3xl:col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
+                  <FormLabel className="flex shrink-0">Email</FormLabel>
+
+                  <div className="w-full">
+                    <FormControl>
+                      <div className="relative w-full">
+                        <Input
+                          key="email"
+                          placeholder=""
+                          type="email"
+                          id="email"
+                          className=" "
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            <div
+              key="text-1"
+              id="text-1"
+              className=" col-span-12 @3xl:col-span-12 col-start-auto"
+            >
+              <p className="not-first:mt-6 text-xl font-medium">Shipping Information</p>
+            </div>
+
+            <FormField
+              control={form.control}
+              name="country"
+              disabled
+              render={({ field }) => (
+                <FormItem className="col-span-12 @3xl:col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
+                  <FormLabel className="flex shrink-0">Country</FormLabel>
+
+                  <div className="w-full">
+                    <FormControl>
+                      <Select
+                        key="country"
+                        {...field}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="w-full ">
+                          <SelectValue placeholder="" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem key="pakistan" value="pakistan">
+                            Pakistan
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="firstname"
+              render={({ field }) => (
+                <FormItem className="col-span-12 @2xl:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
+                  <FormLabel className="flex shrink-0">First Name</FormLabel>
+
+                  <div className="w-full">
+                    <FormControl>
+                      <div className="relative w-full">
+                        <Input
+                          key="firstname"
+                          placeholder=""
+                          type="text"
+                          id="firstname"
+                          className=" "
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <div className="min-h-[20px] w-full">
+                      <FormMessage />
+                    </div>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastname"
+              render={({ field }) => (
+                <FormItem className="col-span-12 @2xl:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
+                  <FormLabel className="flex shrink-0">Last Name</FormLabel>
+
+                  <div className="w-full">
+                    <FormControl>
+                      <div className="relative w-full">
+                        <Input
+                          key="lastname"
+                          placeholder=""
+                          type="text"
+                          id="lastname"
+                          className=" "
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <div className="min-h-[20px] w-full">
+                      <FormMessage />
+                    </div>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem className="col-span-12 @3xl:col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
+                  <FormLabel className="flex shrink-0">Address</FormLabel>
+
+                  <div className="w-full">
+                    <FormControl>
+                      <Textarea
+                        key="address"
+                        id="address"
                         placeholder=""
-                        type="email"
-                        id="email"
-                        className=" "
+                        className=""
                         {...field}
                       />
+                    </FormControl>
+
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="city"
+              render={({ field }) => (
+                <FormItem className="col-span-12 @3xl:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
+                  <FormLabel className="flex shrink-0">City</FormLabel>
+
+                  <div className="w-full">
+                    <FormControl>
+                      <div className="relative w-full">
+                        <Input
+                          key="city"
+                          placeholder=""
+                          type="text"
+                          id="city"
+                          className=" "
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <div className="min-h-[20px] w-full">
+                      <FormMessage />
                     </div>
-                  </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="postalcode"
+              render={({ field }) => (
+                <FormItem className="col-span-12 @3xl:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
+                  <FormLabel className="flex shrink-0">Postal Code</FormLabel>
 
-                  <FormMessage />
-                </div>
-              </FormItem>
-            )}
-          />
-
-          <div
-            key="text-1"
-            id="text-1"
-            className=" col-span-12 @3xl:col-span-12 col-start-auto"
-          >
-            <p className="not-first:mt-6">Shipping Information</p>
-          </div>
-
-          <FormField
-            control={form.control}
-            name="country"
-            disabled
-            render={({ field }) => (
-              <FormItem className="col-span-12 @3xl:col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                <FormLabel className="flex shrink-0">Country</FormLabel>
-
-                <div className="w-full">
-                  <FormControl>
-                    <Select
-                      key="country"
-                      {...field}
-                      onValueChange={field.onChange}
-                    >
-                      <SelectTrigger className="w-full ">
-                        <SelectValue placeholder="" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem key="pakistan" value="pakistan">
-                          Pakistan
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-
-                  <FormMessage />
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="text-input-0"
-            render={({ field }) => (
-              <FormItem className="col-span-12 @2xl:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                <FormLabel className="flex shrink-0">First Name</FormLabel>
-
-                <div className="w-full">
-                  <FormControl>
-                    <div className="relative w-full">
-                      <Input
-                        key="text-input-0"
-                        placeholder=""
-                        type="text"
-                        id="text-input-0"
-                        className=" "
-                        {...field}
-                      />
+                  <div className="w-full">
+                    <FormControl>
+                      <div className="relative w-full">
+                        <Input
+                          key="postalcode"
+                          placeholder=""
+                          type="text"
+                          id="postalcode"
+                          className=" "
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <div className="min-h-[20px] w-full">
+                      <FormMessage />
                     </div>
-                  </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem className="col-span-12 @3xl:col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
+                  <FormLabel className="flex shrink-0">Phone</FormLabel>
 
-                  <FormMessage />
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="text-input-1"
-            render={({ field }) => (
-              <FormItem className="col-span-12 @2xl:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                <FormLabel className="flex shrink-0">Last Name</FormLabel>
-
-                <div className="w-full">
-                  <FormControl>
-                    <div className="relative w-full">
-                      <Input
-                        key="text-input-1"
-                        placeholder=""
-                        type="text"
-                        id="text-input-1"
-                        className=" "
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-
-                  <FormMessage />
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="textarea-0"
-            render={({ field }) => (
-              <FormItem className="col-span-12 @3xl:col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                <FormLabel className="flex shrink-0">Address</FormLabel>
-
-                <div className="w-full">
-                  <FormControl>
-                    <Textarea
-                      key="textarea-0"
-                      id="textarea-0"
-                      placeholder=""
-                      className=""
-                      {...field}
-                    />
-                  </FormControl>
-
-                  <FormMessage />
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="select-0"
-            render={({ field }) => (
-              <FormItem className="col-span-12 @3xl:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                <FormLabel className="flex shrink-0">City</FormLabel>
-
-                <div className="w-full">
-                  <FormControl>
-                    <Select
-                      key="select-0"
-                      {...field}
-                      onValueChange={field.onChange}
-                    >
-                      <SelectTrigger className="w-full ">
-                        <SelectValue placeholder="" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem key="option1" value="option1">
-                          Option 1
-                        </SelectItem>
-
-                        <SelectItem key="option2" value="option2">
-                          Option 2
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-
-                  <FormMessage />
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="select-1"
-            render={({ field }) => (
-              <FormItem className="col-span-12 @3xl:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                <FormLabel className="flex shrink-0">Postal Code</FormLabel>
-
-                <div className="w-full">
-                  <FormControl>
-                    <Select
-                      key="select-1"
-                      {...field}
-                      onValueChange={field.onChange}
-                    >
-                      <SelectTrigger className="w-full ">
-                        <SelectValue placeholder="" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem key="option1" value="option1">
-                          Option 1
-                        </SelectItem>
-
-                        <SelectItem key="option2" value="option2">
-                          Option 2
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-
-                  <FormMessage />
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="tel-input-0"
-            render={({ field }) => (
-              <FormItem className="col-span-12 @3xl:col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                <FormLabel className="flex shrink-0">Phone</FormLabel>
-
-                <div className="w-full">
-                  <FormControl>
-                    <div className="relative w-full">
-                      <Input
-                        key="tel-input-0"
+                  <div className="w-full">
+                    <FormControl>
+                      <div className="relative w-full">
+                        {/* <Input
+                        key="phone"
                         placeholder=""
                         type="tel"
-                        id="tel-input-0"
+                        id="phone"
                         className=" "
                         {...field}
-                      />
-                    </div>
-                  </FormControl>
+                      /> */}
+                        <PhoneInput
+                          {...field}
+                          value={field.value}
+                          onChange={field.onChange}
+                          defaultCountry="PK"
+                        />
+                      </div>
+                    </FormControl>
 
-                  <FormMessage />
-                </div>
-              </FormItem>
-            )}
-          />
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
 
-          <div
-            key="text-3"
-            id="text-3"
-            className=" col-span-12 @3xl:col-span-12 col-start-auto"
-          >
-            <p className="not-first:mt-6">Payment Method</p>
-          </div>
+            <div
+              key="text-3"
+              id="text-3"
+              className=" col-span-12 @3xl:col-span-12 col-start-auto"
+            >
+              <p className="not-first:mt-6 text-xl font-medium">Payment Method</p>
+            </div>
 
-          {/* <FormField
+            {/* <FormField
             control={form.control}
             name="payment-method"
             render={({ field }) => (
@@ -372,15 +390,15 @@ const CheckoutForm = forwardRef<ChildFormHandle, Props>(({ onSubmit }, ref) => {
             )}
           /> */}
 
-          <div
-            key="text-4"
-            id="text-4"
-            className=" col-span-12 @3xl:col-span-12 col-start-auto"
-          >
-            <p className="not-first:mt-6">Shipping Address</p>
-          </div>
+            <div
+              key="text-4"
+              id="text-4"
+              className=" col-span-12 @3xl:col-span-12 col-start-auto"
+            >
+              <p className="not-first:mt-6 text-xl font-medium">Shipping Address</p>
+            </div>
 
-          {/* <FormField
+            {/* <FormField
             control={form.control}
             name="checkbox-1"
             render={({ field }) => (
@@ -418,7 +436,7 @@ const CheckoutForm = forwardRef<ChildFormHandle, Props>(({ onSubmit }, ref) => {
             )}
           /> */}
 
-          {/* <div className="w-full">
+            {/* <div className="w-full">
             <Button
               key="submit-button-0"
               className="w-full"
@@ -428,10 +446,11 @@ const CheckoutForm = forwardRef<ChildFormHandle, Props>(({ onSubmit }, ref) => {
               Place Order
             </Button>
           </div> */}
-        </div>
-      </form>
-    </Form>
-  );
-});
+          </div>
+        </form>
+      </Form>
+    );
+  }
+);
 
 export default CheckoutForm;
