@@ -4,7 +4,10 @@ import {
   createCheckoutSession,
   Metadata,
 } from "@/actions/createCheckoutSession";
-import CheckoutForm from "@/components/CheckoutForm";
+import CheckoutForm, {
+  CheckoutFormType,
+  ChildFormHandle,
+} from "@/components/CheckoutForm";
 import Container from "@/components/Container";
 import PriceFormatter from "@/components/PriceFormatter";
 import { Button } from "@/components/ui/button";
@@ -12,7 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import useCartStore from "@/store";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { ShoppingBag } from "lucide-react";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 function CheckoutPage() {
   const {
@@ -27,6 +30,11 @@ function CheckoutPage() {
   const groupedItems = useCartStore((state) => state.getGroupedItems());
   const { isSignedIn } = useAuth();
   const { user } = useUser();
+
+  const handleSubmit = (data: CheckoutFormType) => {
+    console.log("Parent received data:", data);
+    // Do API call, toast, redirect, etc.
+  };
 
   const handlePlaceOrder = async () => {
     setLoading(true);
@@ -50,6 +58,8 @@ function CheckoutPage() {
       setLoading(false);
     }
   };
+  const formRef = useRef<ChildFormHandle>(null);
+
   return (
     <div className="bg-muted pb-52 md:pb-10 flex-grow">
       <Container>
@@ -60,11 +70,14 @@ function CheckoutPage() {
           </div>
           <div className="grid lg:grid-cols-3 md:gap-8">
             {/* Checkout form start */}
-            <div className="lg:col-span-2 rounded-lg max-h-[calc(100vh-100px)] pr-2">
+            <div className="lg:col-span-2 rounded-lg">
               <div className="border bg-background rounded-md">
                 <div className="p-6">
-                  <CheckoutForm />
-                  <Button className="w-full cursor-pointer font-semibold tracking-wide">
+                  <CheckoutForm ref={formRef} onSubmit={handleSubmit} />
+                  <Button
+                    onClick={() => formRef.current?.submit()}
+                    className="w-full cursor-pointer font-semibold tracking-wide"
+                  >
                     {loading ? "Processing" : "Place Order"}
                   </Button>
                 </div>
@@ -74,7 +87,7 @@ function CheckoutPage() {
             {/* Checkout form end */}
 
             <div className="lg:col-span-1">
-              <div className="hidden md:inline-block w-full bg-background p-6 rounded-lg border sticky top-24">
+              <div className="hidden md:inline-block w-full bg-background p-6 rounded-lg border sticky top-16">
                 <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
                 <div className="space-y-4">
                   <div className="flex justify-between">

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { forwardRef, useImperativeHandle, useRef } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -22,30 +22,41 @@ import { Textarea } from "./ui/textarea";
 import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
 import { useForm } from "react-hook-form";
+const formSchema = z.object({
+  "text-0": z.string(),
+  "email": z.string(),
+  "text-1": z.string(),
+  "country": z.string(),
+  "text-input-0": z.string(),
+  "text-input-1": z.string(),
+  "textarea-0": z.string(),
+  "select-0": z.string(),
+  "select-1": z.string(),
+  "tel-input-0": z.string(),
+  "text-3": z.string(),
+  "text-4": z.string(),
+});
 
-function CheckoutForm() {
-  const formSchema = z.object({
-    "text-0": z.string(),
-    "email-input-0": z.string(),
-    "text-1": z.string(),
-    "select-2": z.string(),
-    "text-input-0": z.string(),
-    "text-input-1": z.string(),
-    "textarea-0": z.string(),
-    "select-0": z.string(),
-    "select-1": z.string(),
-    "tel-input-0": z.string(),
-    "text-3": z.string(),
-    "text-4": z.string(),
-  });
+export type ChildFormHandle = {
+  submit: () => void;
+};
 
-  const form = useForm<z.infer<typeof formSchema>>({
+export type CheckoutFormType = z.infer<typeof formSchema>;
+
+type Props = {
+  onSubmit: (data: CheckoutFormType) => void;
+};
+
+const CheckoutForm = forwardRef<ChildFormHandle, Props>(({ onSubmit }, ref) => {
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const form = useForm<CheckoutFormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       "text-0": "",
-      "email-input-0": "",
+      "email": "",
       "text-1": "",
-      "select-2": "",
+      "country": "pakistan",
       "text-input-0": "",
       "text-input-1": "",
       "textarea-0": "",
@@ -56,14 +67,15 @@ function CheckoutForm() {
       "text-4": "",
     },
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
 
   function onReset() {
     form.reset();
     form.clearErrors();
   }
+  // Expose submit function to parent
+  useImperativeHandle(ref, () => ({
+    submit: () => form.handleSubmit(onSubmit)(),
+  }));
   return (
     <Form {...form}>
       <form
@@ -82,7 +94,7 @@ function CheckoutForm() {
 
           <FormField
             control={form.control}
-            name="email-input-0"
+            name="email"
             render={({ field }) => (
               <FormItem className="col-span-12 @3xl:col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
                 <FormLabel className="flex shrink-0">Email</FormLabel>
@@ -91,10 +103,10 @@ function CheckoutForm() {
                   <FormControl>
                     <div className="relative w-full">
                       <Input
-                        key="email-input-0"
+                        key="email"
                         placeholder=""
                         type="email"
-                        id="email-input-0"
+                        id="email"
                         className=" "
                         {...field}
                       />
@@ -117,15 +129,16 @@ function CheckoutForm() {
 
           <FormField
             control={form.control}
-            name="select-2"
+            name="country"
+            disabled
             render={({ field }) => (
               <FormItem className="col-span-12 @3xl:col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                <FormLabel className="flex shrink-0">Countary</FormLabel>
+                <FormLabel className="flex shrink-0">Country</FormLabel>
 
                 <div className="w-full">
                   <FormControl>
                     <Select
-                      key="select-2"
+                      key="country"
                       {...field}
                       onValueChange={field.onChange}
                     >
@@ -133,12 +146,8 @@ function CheckoutForm() {
                         <SelectValue placeholder="" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem key="option1" value="option1">
-                          Option 1
-                        </SelectItem>
-
-                        <SelectItem key="option2" value="option2">
-                          Option 2
+                        <SelectItem key="pakistan" value="pakistan">
+                          Pakistan
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -153,7 +162,7 @@ function CheckoutForm() {
             control={form.control}
             name="text-input-0"
             render={({ field }) => (
-              <FormItem className="col-span-12 @3xl:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
+              <FormItem className="col-span-12 @2xl:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
                 <FormLabel className="flex shrink-0">First Name</FormLabel>
 
                 <div className="w-full">
@@ -179,7 +188,7 @@ function CheckoutForm() {
             control={form.control}
             name="text-input-1"
             render={({ field }) => (
-              <FormItem className="col-span-12 @3xl:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
+              <FormItem className="col-span-12 @2xl:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
                 <FormLabel className="flex shrink-0">Last Name</FormLabel>
 
                 <div className="w-full">
@@ -423,6 +432,6 @@ function CheckoutForm() {
       </form>
     </Form>
   );
-}
+});
 
 export default CheckoutForm;
