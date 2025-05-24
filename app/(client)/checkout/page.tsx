@@ -86,7 +86,7 @@ function CheckoutPage() {
                     className="w-full cursor-pointer font-semibold tracking-wide"
                     disabled={!isFormValid}
                   >
-                    {loading ? "Processing" : "Place Order"}
+                    {loading ? "Processing" : "Complete Order"}
                   </Button>
                 </div>
               </div>
@@ -150,7 +150,7 @@ function CheckoutPage() {
               </div>
             </div>
           </div>
-        </>{" "}
+        </>
       </Container>
     </div>
   );
