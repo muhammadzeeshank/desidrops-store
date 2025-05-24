@@ -31,9 +31,7 @@ import { useForm } from "react-hook-form";
 import { PhoneInput } from "./PhoneInput";
 import { isValidPhoneNumber } from "react-phone-number-input";
 const formSchema = z.object({
-  "text-0": z.string(),
   email: z.string().email("Invalid email address"),
-  "text-1": z.string(),
   country: z.string(),
   firstname: z.string().min(1, "Required"),
   lastname: z.string().min(1, "Required"),
@@ -46,8 +44,7 @@ const formSchema = z.object({
     .refine((val) => isValidPhoneNumber(val || ""), {
       message: "Invalid phone number",
     }),
-  "text-3": z.string(),
-  "text-4": z.string(),
+  paymentMethod: z.string(),
 });
 
 export type CheckoutFormRef = {
@@ -68,9 +65,7 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
     const form = useForm<CheckoutFormType>({
       resolver: zodResolver(formSchema),
       defaultValues: {
-        "text-0": "",
         email: "",
-        "text-1": "",
         country: "pakistan",
         firstname: "",
         lastname: "",
@@ -78,8 +73,7 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
         city: "",
         postalcode: "",
         phone: "",
-        "text-3": "",
-        "text-4": "",
+        paymentMethod: "Cash on Delivery (COD)",
       },
       mode: "onChange",
     });
@@ -110,10 +104,10 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
           className="space-y-8 @container"
         >
           <div className="grid grid-cols-12 gap-4">
-            <div
-              className=" col-span-12 @3xl:col-span-12 col-start-auto"
-            >
-              <p className="not-first:mt-6 text-xl font-medium">Contact Information</p>
+            <div className=" col-span-12 @3xl:col-span-12 col-start-auto">
+              <p className="not-first:mt-6 text-xl font-medium">
+                Contact Information
+              </p>
             </div>
 
             <FormField
@@ -143,12 +137,10 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
               )}
             />
 
-            <div
-              key="text-1"
-              id="text-1"
-              className=" col-span-12 @3xl:col-span-12 col-start-auto"
-            >
-              <p className="not-first:mt-6 text-xl font-medium">Shipping Information</p>
+            <div className=" col-span-12 @3xl:col-span-12 col-start-auto">
+              <p className="not-first:mt-6 text-xl font-medium">
+                Shipping Information
+              </p>
             </div>
 
             <FormField
@@ -346,56 +338,41 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
               )}
             />
 
-            <div
-              key="text-3"
-              id="text-3"
-              className=" col-span-12 @3xl:col-span-12 col-start-auto"
-            >
-              <p className="not-first:mt-6 text-xl font-medium">Payment Method</p>
+            <div className=" col-span-12 @3xl:col-span-12 col-start-auto">
+              <p className="not-first:mt-6 text-xl font-medium">
+                Payment Method
+              </p>
             </div>
-
-            {/* <FormField
-            control={form.control}
-            name="payment-method"
-            render={({ field }) => (
-              <FormItem className="col-span-12 @3xl:col-span-12 col-start-auto @3xl:block flex self-end flex-col gap-2 space-y-0 items-start">
-                <FormLabel className="hidden shrink-0">COD</FormLabel>
-
-                <div className="w-full">
-                  <FormControl>
-                    <FormLabel
-                      key="checkbox-0"
-                      className="border-0 p-0 @3xl:rounded-md @3xl:border @3xl:p-4 @3xl:space-x-2 w-full flex items-start has-[[data-state=checked]]:border-primary"
-                      htmlFor="payment-method"
-                    >
-                      <Checkbox
-                        id="payment-method"
-                        className=""
-                        {...field}
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                      <div className="grid gap-1.5 leading-none">
-                        <FormLabel>COD</FormLabel>
-                        <p className="text-sm text-muted-foreground">
-                          Cash On Delivery
-                        </p>
+            <FormField
+              control={form.control}
+              name="paymentMethod"
+              render={({ field }) => (
+                <FormItem className="col-span-12 @3xl:col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
+                  <div className="w-full">
+                    <FormControl>
+                      <div className="relative w-full">
+                        <Input
+                          key="paymentMethod"
+                          placeholder=""
+                          type="text"
+                          id="paymentMethod"
+                          readOnly
+                          {...field}
+                        />
                       </div>
-                    </FormLabel>
-                  </FormControl>
+                    </FormControl>
+                    <div className="min-h-[20px] w-full">
+                      <FormMessage />
+                    </div>
+                  </div>
+                </FormItem>
+              )}
+            />
 
-                  <FormMessage />
-                </div>
-              </FormItem>
-            )}
-          /> */}
-
-            <div
-              key="text-4"
-              id="text-4"
-              className=" col-span-12 @3xl:col-span-12 col-start-auto"
-            >
-              <p className="not-first:mt-6 text-xl font-medium">Shipping Address</p>
+            <div className=" col-span-12 @3xl:col-span-12 col-start-auto">
+              <p className="not-first:mt-6 text-xl font-medium">
+                Shipping Address
+              </p>
             </div>
 
             {/* <FormField
