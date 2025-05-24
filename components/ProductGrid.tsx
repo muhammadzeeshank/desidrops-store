@@ -31,13 +31,13 @@ const ProductGrid = () => {
     <div className="mt-10 flex flex-col items-center">
       {loading ? (
         <div className="flex flex-col items-center justify-center py-10 min-h-80 space-y-4 text-center bg-foreground/5 rounded-lg w-full mt-10">
-          <motion.div className="flex items-center space-x-2 text-blue-600">
+          <motion.div className="flex items-center space-x-2 text-primary">
             <Loader2 className="w-5 h-5 animate-spin" />
             <span>Product is loading...</span>
           </motion.div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2  gap-8">
+        <div className="grid grid-cols-1  gap-8">
           <>
             {products?.map((product) => (
               <AnimatePresence key={product?._id}>

@@ -280,7 +280,7 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
               name="postalcode"
               render={({ field }) => (
                 <FormItem className="col-span-12 @3xl:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                  <FormLabel className="flex shrink-0">Postal Code</FormLabel>
+                  <FormLabel className="flex shrink-0">Postal Code (Optional)</FormLabel>
 
                   <div className="w-full">
                     <FormControl>
