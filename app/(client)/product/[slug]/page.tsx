@@ -16,7 +16,6 @@ const ProductPage = async ({
   const { slug } = await params;
   const product = await getProductBySlug(slug);
 
-
   if (!product) {
     return notFound();
   }
@@ -34,9 +33,13 @@ const ProductPage = async ({
               className="text-lg font-bold"
             />
           </div>
-          {product?.stock && (
-            <p className="bg-green-100 dark:bg-green-900 w-24 text-center text-green-900 dark:text-green-100 text-sm py-2.5 font-semibold rounded-lg">
+          {product?.stock ? (
+            <p className="bg-accent w-24 text-center text-accent-foreground text-sm py-2.5 font-semibold rounded-lg">
               In Stock
+            </p>
+          ) : (
+            <p className="bg-destructive w-24 text-center text-destructive-foreground text-sm py-2.5 font-semibold rounded-lg">
+              Out of Stock
             </p>
           )}
 
