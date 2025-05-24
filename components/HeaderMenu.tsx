@@ -27,7 +27,7 @@ const HeaderMenu = () => {
         />
       </Link>
 
-      <Link
+      {/* <Link
         href={"/shop"}
         className={`hover:text-foreground hoverEffect relative group ${
           pathname === "/shop" ? "text-foreground" : "text-foreground/70"
@@ -44,7 +44,7 @@ const HeaderMenu = () => {
             pathname === "/shop" && "w-1/2"
           }`}
         />
-      </Link>
+      </Link> */}
     </div>
   );
 };

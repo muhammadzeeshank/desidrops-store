@@ -3,17 +3,26 @@ import SocialMedia from "./SocialMedia";
 import Link from "next/link";
 import { Separator } from "./ui/separator";
 import Logo from "./Logo";
+import Container from "./Container";
 const footerLinks = [
   {
     title: "Home",
     href: "#",
   },
   {
-    title: "Help",
+    title: "Contact Us",
     href: "#",
   },
   {
-    title: "Policy",
+    title: "About Us",
+    href: "#",
+  },
+  {
+    title: "Privacy Policy",
+    href: "#",
+  },
+  {
+    title: "Return Policy",
     href: "#",
   },
 ];
@@ -39,31 +48,20 @@ const Footer = () => {
             </ul>
           </div>
           <Separator />
-          <div className="py-8 flex flex-col-reverse sm:flex-row items-center justify-between gap-x-2 gap-y-5 px-6 xl:px-0">
-            {/* Copyright */}
-            <span className="text-muted-foreground">
-              &copy; {new Date().getFullYear()}{" "}
-              <Link href="/" target="_blank">
-                Desi Drops
-              </Link>
-              . All rights reserved.
-            </span>
-            {/* <div className="flex items-center gap-5 text-muted-foreground">
-              <Link href="#" target="_blank">
-                <TwitterIcon className="h-5 w-5" />
-              </Link>
-              <Link href="#" target="_blank">
-                <DribbbleIcon className="h-5 w-5" />
-              </Link>
-              <Link href="#" target="_blank">
-                <TwitchIcon className="h-5 w-5" />
-              </Link>
-              <Link href="#" target="_blank">
-                <GithubIcon className="h-5 w-5" />
-              </Link>
-            </div> */}
-            <SocialMedia />
-          </div>
+          <Container>
+            {" "}
+            <div className="py-8 flex flex-col-reverse sm:flex-row items-center justify-between gap-x-2 gap-y-5 px-6 xl:px-0">
+              {/* Copyright */}
+              <span className="text-muted-foreground">
+                &copy; {new Date().getFullYear()}{" "}
+                <Link href="/" target="_blank">
+                  Desi Drops
+                </Link>
+                . All rights reserved.
+              </span>
+              <SocialMedia />
+            </div>
+          </Container>
         </div>
       </footer>
     </div>
