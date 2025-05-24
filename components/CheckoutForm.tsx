@@ -45,6 +45,7 @@ const formSchema = z.object({
       message: "Invalid phone number",
     }),
   paymentMethod: z.string(),
+  billingAddress: z.string(),
 });
 
 export type CheckoutFormRef = {
@@ -66,7 +67,7 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
       resolver: zodResolver(formSchema),
       defaultValues: {
         email: "",
-        country: "pakistan",
+        country: "Pakistan",
         firstname: "",
         lastname: "",
         address: "",
@@ -74,6 +75,7 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
         postalcode: "",
         phone: "",
         paymentMethod: "Cash on Delivery (COD)",
+        billingAddress: "Same as shipping address",
       },
       mode: "onChange",
     });
@@ -146,30 +148,25 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
             <FormField
               control={form.control}
               name="country"
-              disabled
               render={({ field }) => (
                 <FormItem className="col-span-12 @3xl:col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
                   <FormLabel className="flex shrink-0">Country</FormLabel>
-
                   <div className="w-full">
                     <FormControl>
-                      <Select
-                        key="country"
-                        {...field}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger className="w-full ">
-                          <SelectValue placeholder="" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem key="pakistan" value="pakistan">
-                            Pakistan
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <div className="relative w-full">
+                        <Input
+                          key="country"
+                          placeholder=""
+                          type="text"
+                          id="country"
+                          readOnly
+                          {...field}
+                        />
+                      </div>
                     </FormControl>
-
-                    <FormMessage />
+                    <div className="min-h-[20px] w-full">
+                      <FormMessage />
+                    </div>
                   </div>
                 </FormItem>
               )}
@@ -357,6 +354,7 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
                           type="text"
                           id="paymentMethod"
                           readOnly
+                          className="bg-primary/10 border-ring"
                           {...field}
                         />
                       </div>
@@ -374,44 +372,32 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
                 Shipping Address
               </p>
             </div>
-
-            {/* <FormField
-            control={form.control}
-            name="checkbox-1"
-            render={({ field }) => (
-              <FormItem className="col-span-12 @3xl:col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                <FormLabel className="hidden shrink-0">
-                  Same as Shipping Address
-                </FormLabel>
-
-                <div className="w-full">
-                  <FormControl>
-                    <FormLabel
-                      key="checkbox-1"
-                      className="border-0 p-0 @3xl:rounded-md @3xl:border @3xl:p-4 @3xl:space-x-2 w-full flex items-start has-[[data-state=checked]]:border-primary"
-                      htmlFor="checkbox-1"
-                    >
-                      <Checkbox
-                        id="checkbox-1"
-                        className=""
-                        {...field}
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                      <div className="grid gap-1.5 leading-none">
-                        <FormLabel>Same as Shipping Address</FormLabel>
-                        <p className="text-sm text-muted-foreground">
-                          Checkbox Description
-                        </p>
+            <FormField
+              control={form.control}
+              name="billingAddress"
+              render={({ field }) => (
+                <FormItem className="col-span-12 @3xl:col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
+                  <div className="w-full">
+                    <FormControl>
+                      <div className="relative w-full">
+                        <Input
+                          key="billingAddress"
+                          placeholder=""
+                          type="text"
+                          id="billingAddress"
+                          readOnly
+                          className="bg-primary/10 border-ring"
+                          {...field}
+                        />
                       </div>
-                    </FormLabel>
-                  </FormControl>
-
-                  <FormMessage />
-                </div>
-              </FormItem>
-            )}
-          /> */}
+                    </FormControl>
+                    <div className="min-h-[20px] w-full">
+                      <FormMessage />
+                    </div>
+                  </div>
+                </FormItem>
+              )}
+            />
 
             {/* <div className="w-full">
             <Button
