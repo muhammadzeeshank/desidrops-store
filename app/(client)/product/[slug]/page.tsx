@@ -1,9 +1,12 @@
 import AddToCartButton from "@/components/AddToCartButton";
+import BuyNowButton from "@/components/BuyNowButton";
 import Container from "@/components/Container";
 import ImageView from "@/components/ImageView";
 import PriceView from "@/components/PriceView";
+import { FormControl, FormLabel } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { getProductBySlug } from "@/sanity/helpers";
-import { Heart, ScanHeart, Truck } from "lucide-react";
+import { Check, Heart, ScanHeart, Truck } from "lucide-react";
 import { notFound } from "next/navigation";
 import { FaRegQuestionCircle } from "react-icons/fa";
 import { FiShare2 } from "react-icons/fi";
@@ -47,11 +50,17 @@ const ProductPage = async ({
           <p className="text-sm text-foreground/60 tracking-wide">
             {product?.description}
           </p>
-          <div className="flex items-center gap-2.5 lg:gap-5">
-            <AddToCartButton
-              product={product}
-              className="bg-foreground/80 text-background hover:bg-foreground hoverEffect"
-            />
+          <div className="w-full">
+            <div
+              id="paymentMethod"
+              className="bg-primary/10 border border-ring rounded-md px-3 py-2.5 text-sm text-muted-foreground"
+            >
+              1 Liter
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row items-center gap-2.5 lg:gap-5">
+            <AddToCartButton product={product} />
+            <BuyNowButton product={product} />
             {/* <button className="border-2 border-foreground/30 text-foreground/60 px-2.5 py-1.5 rounded-md hover:text-foreground hover:border-foreground hoverEffect">
               <Heart className="w-5 h-5" />
             </button> */}
@@ -67,27 +76,27 @@ const ProductPage = async ({
               <p>Health-Focused</p>
             </div>
             <div className="flex items-center gap-2 text-sm text-foreground hover:text-ring  hoverEffect">
+              <Check className="text-lg" />
+              <p>Cold Pressed</p>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-foreground hover:text-ring  hoverEffect">
               <Truck className="text-lg" />
               <p>Cash On Delivery</p>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-5">
-            <div className="border border-darkBlue/20 text-center p-3 hover:border-darkBlue hoverEffect rounded-md">
-              <p className="text-base font-semibold text-foreground">
-                Free Shipping
-              </p>
-              <p className="text-sm text-foreground/50">
-                Free shipping over order $120
-              </p>
+            <div className="border border-foreground/20 text-center p-3 hover:border-primary hoverEffect rounded-md">
+              <p className="text-base font-semibold text-foreground">COD</p>
+              <p className="text-sm text-foreground/50">Cash On Delivery</p>
             </div>
-            <div className="border border-darkBlue/20 text-center p-3 hover:border-darkBlue hoverEffect rounded-md">
+            {/* <div className="border border-darkBlue/20 text-center p-3 hover:border-darkBlue hoverEffect rounded-md">
               <p className="text-base font-semibold text-foreground">
                 Flexible Payment
               </p>
               <p className="text-sm text-foreground/50">
                 Pay with Multiple Credit Cards
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </Container>

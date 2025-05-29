@@ -1,8 +1,8 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Button } from "./ui/button";
-// import useCartStore from "@/store";
 import { cn } from "@/lib/utils";
 import PriceFormatter from "./PriceFormatter";
 import QuantityButtons from "./QuantityButtons";
