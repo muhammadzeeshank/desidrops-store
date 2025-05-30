@@ -15,9 +15,18 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import useCartStore from "@/store";
 import { useAuth, useUser } from "@clerk/nextjs";
-import { ShoppingBag } from "lucide-react";
+import { Heart, ShoppingBag, Trash } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { urlFor } from "@/sanity/lib/image";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import QuantityButtons from "@/components/QuantityButtons";
 
 function CheckoutPage() {
   const {
@@ -118,6 +127,48 @@ function CheckoutPage() {
             <div className="lg:col-span-1">
               <div className="hidden md:inline-block w-full bg-background p-6 rounded-lg border sticky top-16">
                 <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+                <div className="border-b mb-4 bg-background ">
+                  {groupedItems?.map(({ product }) => {
+                    const itemCount = getItemCount(product?._id);
+                    return (
+                      <div
+                        key={product?._id}
+                        className="border-b p-2.5 last:border-b-0 flex items-center justify-between gap-5"
+                      >
+                        <div className="flex flex-1 items-center gap-2">
+                          {product?.images && (
+                            <div className="relative border p-0.5 md:p-1 mr-2 rounded-md group">
+                              <Image
+                                src={urlFor(product.images[0]).url()}
+                                alt="productImage"
+                                width={300}
+                                height={300}
+                                loading="lazy"
+                                className="w-32 md:w-16 h-32 md:h-16 object-cover group-hover:scale-105 overflow-hidden transition-transform duration-500"
+                              />
+                              {
+                                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-semibold px-2 py-1 rounded-full shadow-md">
+                                  {isBuyNowItem ? 1 : itemCount}
+                                </span>
+                              }
+                            </div>
+                          )}
+                          <div className="flex flex-1 flex-col items-center py-1">
+                            <h2 className="text-sm font-semibold ">
+                              {product?.name}
+                            </h2>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-start justify-between p-0.5 md:p-1">
+                          <PriceFormatter
+                            amount={(product?.price as number) * itemCount}
+                            className="font-bold text-sm"
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
                 <div className="space-y-4">
                   <div className="flex justify-between">
                     <span>SubTotal</span>
