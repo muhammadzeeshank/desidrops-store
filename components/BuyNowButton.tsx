@@ -14,15 +14,15 @@ interface Props {
 }
 
 const BuyNowButton = ({ product, className }: Props) => {
-  const { addItem, getItemCount } = useCartStore();
+  const { setBuyNowItem } = useCartStore();
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
 
   const isOutOfStock = product?.stock === 0;
 
   const handleCheckout = () => {
-    addItem(product); // add product to cart
-    router.push("/checkout"); // then go to checkout
+    setBuyNowItem(product); // add product to cart
+    router.push("/checkout?from=buy-now"); // then go to checkout
   };
 
   // Use useEffect to set isClient to true after component mounts

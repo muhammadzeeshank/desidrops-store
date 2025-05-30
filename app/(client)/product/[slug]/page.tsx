@@ -79,10 +79,6 @@ const ProductPage = async ({
               <Check className="text-lg" />
               <p>Cold Pressed</p>
             </div>
-            <div className="flex items-center gap-2 text-sm text-foreground hover:text-ring  hoverEffect">
-              <Truck className="text-lg" />
-              <p>Cash On Delivery</p>
-            </div>
           </div>
           <div className="flex flex-wrap items-center gap-5">
             <div className="border border-foreground/20 text-center p-3 hover:border-primary hoverEffect rounded-md">

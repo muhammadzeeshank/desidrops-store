@@ -9,13 +9,15 @@ import CheckoutForm, {
   CheckoutFormRef,
 } from "@/components/CheckoutForm";
 import Container from "@/components/Container";
+import Loading from "@/components/Loading";
 import PriceFormatter from "@/components/PriceFormatter";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import useCartStore from "@/store";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { ShoppingBag } from "lucide-react";
-import React, { useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useRef, useState } from "react";
 
 function CheckoutPage() {
   const {
@@ -23,14 +25,25 @@ function CheckoutPage() {
     getTotalPrice,
     getItemCount,
     getSubTotalPrice,
-    resetCart,
+    buyNowItem,
+    getBuyNowTotalPrice,
+    getBuyNowSubTotalPrice,
   } = useCartStore();
-  const [isClient, setIsClient] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const groupedItems = useCartStore((state) => state.getGroupedItems());
-  const { isSignedIn } = useAuth();
   const { user } = useUser();
   const [isFormValid, setIsFormValid] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const [isBuyNowItem, setIsBuyNowItem] = useState(false);
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from");
+
+  useEffect(() => {
+    if (from === "buy-now") {
+      setIsBuyNowItem(true);
+    }
+  }, [from]);
 
   const handleSubmit = (data: CheckoutFormType) => {
     console.log("Parent received data:", data);
@@ -59,10 +72,18 @@ function CheckoutPage() {
       setLoading(false);
     }
   };
+
   const formRef = useRef<CheckoutFormRef>(null);
   const handleValidityChange = (valid: boolean) => {
     setIsFormValid(valid);
   };
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  if (!isClient) {
+    return <Loading />;
+  }
+
   return (
     <div className="bg-muted pb-52 md:pb-10 flex-grow">
       <Container>
@@ -100,12 +121,22 @@ function CheckoutPage() {
                 <div className="space-y-4">
                   <div className="flex justify-between">
                     <span>SubTotal</span>
-                    <PriceFormatter amount={getSubTotalPrice()} />
+                    <PriceFormatter
+                      amount={
+                        isBuyNowItem
+                          ? getBuyNowSubTotalPrice()
+                          : getSubTotalPrice()
+                      }
+                    />
                   </div>
                   <div className="flex justify-between">
                     <span>Discount</span>
                     <PriceFormatter
-                      amount={getSubTotalPrice() - getTotalPrice()}
+                      amount={
+                        isBuyNowItem
+                          ? getBuyNowSubTotalPrice() - getBuyNowTotalPrice()
+                          : getSubTotalPrice() - getTotalPrice()
+                      }
                     />
                   </div>
 
@@ -114,7 +145,11 @@ function CheckoutPage() {
                     <span>Total</span>
 
                     <PriceFormatter
-                      amount={useCartStore?.getState().getTotalPrice()}
+                      amount={
+                        isBuyNowItem
+                          ? getBuyNowTotalPrice()
+                          : useCartStore?.getState().getTotalPrice()
+                      }
                       className="text-lg font-bold text-foreground"
                     />
                   </div>
@@ -128,12 +163,22 @@ function CheckoutPage() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>SubTotal</span>
-                    <PriceFormatter amount={getSubTotalPrice()} />
+                    <PriceFormatter
+                      amount={
+                        isBuyNowItem
+                          ? getBuyNowSubTotalPrice()
+                          : getSubTotalPrice()
+                      }
+                    />
                   </div>
                   <div className="flex justify-between">
                     <span>Discount</span>
                     <PriceFormatter
-                      amount={getSubTotalPrice() - getTotalPrice()}
+                      amount={
+                        isBuyNowItem
+                          ? getBuyNowSubTotalPrice() - getBuyNowTotalPrice()
+                          : getSubTotalPrice() - getTotalPrice()
+                      }
                     />
                   </div>
 
@@ -142,7 +187,11 @@ function CheckoutPage() {
                     <span>Total</span>
 
                     <PriceFormatter
-                      amount={useCartStore?.getState().getTotalPrice()}
+                      amount={
+                        isBuyNowItem
+                          ? getBuyNowTotalPrice()
+                          : useCartStore?.getState().getTotalPrice()
+                      }
                       className="text-lg font-bold text-foreground"
                     />
                   </div>

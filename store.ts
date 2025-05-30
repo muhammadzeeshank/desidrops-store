@@ -17,6 +17,12 @@ interface CartState {
   getSubTotalPrice: () => number;
   getItemCount: (productId: string) => number;
   getGroupedItems: () => CartItem[];
+
+  buyNowItem: CartItem | null; // ✅ New state
+  setBuyNowItem: (product: Product) => void;
+  clearBuyNowItem: () => void;
+  getBuyNowTotalPrice: () => number;
+  getBuyNowSubTotalPrice: () => number;
 }
 
 const useCartStore = create<CartState>()(
@@ -50,7 +56,9 @@ const useCartStore = create<CartState>()(
         })),
       deleteCartProduct: (productId) =>
         set((state) => ({
-          items: state.items.filter(({ product }) => product?._id !== productId),
+          items: state.items.filter(
+            ({ product }) => product?._id !== productId
+          ),
         })),
       resetCart: () => set({ items: [] }),
       getTotalPrice: () => {
@@ -72,8 +80,32 @@ const useCartStore = create<CartState>()(
         return item ? item.quantity : 0;
       },
       getGroupedItems: () => get().items,
+      buyNowItem: null,
+      setBuyNowItem: (product: Product) =>
+        set(() => ({ buyNowItem: { product, quantity: 1 } })),
+      clearBuyNowItem: () => set(() => ({ buyNowItem: null })),
+      getBuyNowTotalPrice: () => {
+        const item = get().buyNowItem;
+        if (!item) return 0;
+        const price = item.product.price ?? 0;
+        return price * item.quantity;
+      },
+      getBuyNowSubTotalPrice: () => {
+        const item = get().buyNowItem;
+        if (!item) return 0;
+        const price = item.product.price ?? 0;
+        const discount = ((item.product.discount ?? 0) * price) / 100;
+        const discountedPrice = price + discount;
+        return discountedPrice * item.quantity;
+      },
     }),
-    { name: "cart-store" }
+    {
+      name: "cart-store",
+      partialize: (state) => ({
+        items: state.items,
+        // don't persist buyNowItem or its functions
+      }),
+    }
   )
 );
 export default useCartStore;
