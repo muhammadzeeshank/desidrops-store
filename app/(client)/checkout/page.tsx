@@ -1,32 +1,24 @@
 "use client";
 
-import {
-  createCheckoutSession,
-  Metadata,
-} from "@/actions/createCheckoutSession";
 import CheckoutForm, {
-  CheckoutFormType,
   CheckoutFormRef,
+  CheckoutFormType,
 } from "@/components/CheckoutForm";
 import Container from "@/components/Container";
 import Loading from "@/components/Loading";
 import PriceFormatter from "@/components/PriceFormatter";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import useCartStore from "@/store";
-import { useAuth, useUser } from "@clerk/nextjs";
-import { Heart, ShoppingBag, Trash } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import { OrderDTO, OrderProduct } from "@/lib/schemas/place-order";
 import { urlFor } from "@/sanity/lib/image";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import QuantityButtons from "@/components/QuantityButtons";
+import useCartStore from "@/store";
+import { useUser } from "@clerk/nextjs";
+import { ShoppingBag } from "lucide-react";
+import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+import router from "next/router";
+import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 function CheckoutPage() {
   const {
@@ -34,17 +26,24 @@ function CheckoutPage() {
     getTotalPrice,
     getItemCount,
     getSubTotalPrice,
-    buyNowItem,
     getBuyNowTotalPrice,
     getBuyNowSubTotalPrice,
+    clearBuyNowItem,
+    resetCart,
   } = useCartStore();
 
   const [loading, setLoading] = useState(false);
   const groupedItems = useCartStore((state) => state.getGroupedItems());
+  const buyNowItem = useCartStore((state) => state.getBuyNowItem());
+  const [isBuyNowItem, setIsBuyNowItem] = useState(false);
+  const itemsToRender =
+    isBuyNowItem && buyNowItem ? [buyNowItem] : groupedItems;
+  const discount = isBuyNowItem
+    ? getBuyNowSubTotalPrice() - getBuyNowTotalPrice()
+    : getSubTotalPrice() - getTotalPrice();
   const { user } = useUser();
   const [isFormValid, setIsFormValid] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const [isBuyNowItem, setIsBuyNowItem] = useState(false);
   const searchParams = useSearchParams();
   const from = searchParams.get("from");
 
@@ -54,33 +53,83 @@ function CheckoutPage() {
     }
   }, [from]);
 
-  const handleSubmit = (data: CheckoutFormType) => {
-    console.log("Parent received data:", data);
-    // Do API call, toast, redirect, etc.
+  const transformToOrderDTO = (form: CheckoutFormType): OrderDTO => {
+    const products: OrderProduct[] = itemsToRender.map((item) => ({
+      slug: item.product.slug.current,
+      quantity: item.quantity,
+      id: ""
+    }));
+
+    return {
+      customerName: `${form.firstname} ${form.lastname}`,
+      customerEmail: form.email,
+      customerPhone: form.phone,
+      customerAddress: form.address,
+      city: form.city,
+      postalCode: form.postalcode,
+      paymentMethod: form.paymentMethod,
+      products,
+      clerkUserId: null,
+    };
   };
 
-  const handlePlaceOrder = async () => {
-    setLoading(true);
+  const handlePlaceOrder = async (checkoutFormData: CheckoutFormType) => {
+    console.log("here")
     try {
-      console.log("user: ", user);
-      const metadata: Metadata = {
-        orderNumber: crypto.randomUUID(),
-        customerName: user?.fullName ?? "Unknown",
-        customerEmail: user?.emailAddresses[0]?.emailAddress ?? "Unknown",
-        clerkUserId: user!.id,
-      };
+          console.log("item:  ...", itemsToRender)
 
-      console.log("metadata: ", metadata);
-      const checkoutUrl = await createCheckoutSession(groupedItems, metadata);
-      if (checkoutUrl) {
-        window.location.href = checkoutUrl;
+      const orderData = transformToOrderDTO(checkoutFormData);
+      console.log("orderDatatoPush: ", orderData)
+
+      const response = await fetch("/api/place-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.error("API Error:", error);
+        // show error toast
+        return;
       }
+
+      const result = await response.json();
+      // console.log("Order placed successfully:", result);
+      toast.success("Order placed!");
+      resetCart();
+      clearBuyNowItem();
+      router.push("/success");
     } catch (error) {
-      console.error("Error creating checkout session:", error);
-    } finally {
-      setLoading(false);
+      // console.error("Network or unexpected error:", error);
+      toast.error("Something went wrong!");
     }
   };
+
+  // const handlePlaceOrder = async () => {
+  //   setLoading(true);
+  //   try {
+  //     console.log("user: ", user);
+  //     const metadata: Metadata = {
+  //       orderNumber: crypto.randomUUID(),
+  //       customerName: user?.fullName ?? "Unknown",
+  //       customerEmail: user?.emailAddresses[0]?.emailAddress ?? "Unknown",
+  //       clerkUserId: user!.id,
+  //     };
+
+  //     console.log("metadata: ", metadata);
+  //     const checkoutUrl = await createCheckoutSession(groupedItems, metadata);
+  //     if (checkoutUrl) {
+  //       window.location.href = checkoutUrl;
+  //     }
+  //   } catch (error) {
+  //     console.error("Error creating checkout session:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const formRef = useRef<CheckoutFormRef>(null);
   const handleValidityChange = (valid: boolean) => {
@@ -108,7 +157,7 @@ function CheckoutPage() {
                 <div className="p-6">
                   <CheckoutForm
                     ref={formRef}
-                    onSubmit={handleSubmit}
+                    onSubmit={handlePlaceOrder}
                     onValidityChange={handleValidityChange}
                   />
                   <Button
@@ -128,8 +177,10 @@ function CheckoutPage() {
               <div className="hidden md:inline-block w-full bg-background p-6 rounded-lg border sticky top-16">
                 <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
                 <div className="border-b mb-4 bg-background ">
-                  {groupedItems?.map(({ product }) => {
-                    const itemCount = getItemCount(product?._id);
+                  {itemsToRender?.map(({ product }) => {
+                    const itemCount = isBuyNowItem
+                      ? 1
+                      : getItemCount(product?._id);
                     return (
                       <div
                         key={product?._id}
@@ -182,13 +233,7 @@ function CheckoutPage() {
                   </div>
                   <div className="flex justify-between">
                     <span>Discount</span>
-                    <PriceFormatter
-                      amount={
-                        isBuyNowItem
-                          ? getBuyNowSubTotalPrice() - getBuyNowTotalPrice()
-                          : getSubTotalPrice() - getTotalPrice()
-                      }
-                    />
+                    <PriceFormatter amount={discount} />
                   </div>
 
                   <Separator />

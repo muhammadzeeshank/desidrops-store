@@ -1,13 +1,16 @@
 "use client";
-import React, {
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
   forwardRef,
   useEffect,
   useImperativeHandle,
   useRef,
   useState,
 } from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { PhoneInput } from "./PhoneInput";
 import {
   Form,
   FormControl,
@@ -17,20 +20,14 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
 import { Textarea } from "./ui/textarea";
-import { Checkbox } from "./ui/checkbox";
-import { Button } from "./ui/button";
-import { useForm } from "react-hook-form";
-import { PhoneInput } from "./PhoneInput";
-import { isValidPhoneNumber } from "react-phone-number-input";
-const formSchema = z.object({
+
+export type CheckoutFormRef = {
+  submit: () => void;
+};
+import { isValidPhoneNumber } from "libphonenumber-js";
+
+export const formSchema = z.object({
   email: z.string().email("Invalid email address"),
   country: z.string(),
   firstname: z.string().min(1, "Required"),
@@ -47,10 +44,6 @@ const formSchema = z.object({
   paymentMethod: z.string(),
   billingAddress: z.string(),
 });
-
-export type CheckoutFormRef = {
-  submit: () => void;
-};
 
 export type CheckoutFormType = z.infer<typeof formSchema>;
 

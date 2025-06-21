@@ -18,11 +18,13 @@ interface CartState {
   getItemCount: (productId: string) => number;
   getGroupedItems: () => CartItem[];
 
-  buyNowItem: CartItem | null; // ✅ New state
+  buyNowItem: CartItem | null; 
   setBuyNowItem: (product: Product) => void;
   clearBuyNowItem: () => void;
   getBuyNowTotalPrice: () => number;
   getBuyNowSubTotalPrice: () => number;
+  getBuyNowItem: () => CartItem | null;
+
 }
 
 const useCartStore = create<CartState>()(
@@ -98,6 +100,7 @@ const useCartStore = create<CartState>()(
         const discountedPrice = price + discount;
         return discountedPrice * item.quantity;
       },
+      getBuyNowItem: () => get().buyNowItem
     }),
     {
       name: "cart-store",

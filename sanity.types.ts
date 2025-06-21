@@ -75,7 +75,7 @@ export type Product = {
   _updatedAt: string;
   _rev: string;
   name?: string;
-  slug?: Slug;
+  slug: Slug;
   images?: Array<{
     asset?: {
       _ref: string;
@@ -91,7 +91,7 @@ export type Product = {
   }>;
   intro?: string;
   description?: string;
-  price?: number;
+  price: number;
   discount?: number;
   categories?: Array<{
     _ref: string;
@@ -187,7 +187,7 @@ export type SanityImageMetadata = {
 
 export type Slug = {
   _type: "slug";
-  current?: string;
+  current: string;
   source?: string;
 };
 
