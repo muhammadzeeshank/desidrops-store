@@ -6,6 +6,7 @@ import AddToCartButton from "./AddToCartButton";
 import PriceView from "./PriceView";
 import { Product } from "@/sanity.types";
 import { urlFor } from "@/sanity/lib/image";
+import BuyNowButton from "./BuyNowButton";
 
 const ProductCard = ({ product }: { product: Product }) => {
   return (
@@ -35,6 +36,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           discount={product?.discount}
           className="text-lg"
         />
+        <BuyNowButton product={product} />
         <AddToCartButton product={product} />
       </div>
     </div>
