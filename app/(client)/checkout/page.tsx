@@ -16,7 +16,7 @@ import { useUser } from "@clerk/nextjs";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -46,6 +46,7 @@ function CheckoutPage() {
   const [isClient, setIsClient] = useState(false);
   const searchParams = useSearchParams();
   const from = searchParams.get("from");
+  const router = useRouter();
 
   useEffect(() => {
     if (from === "buy-now") {
@@ -57,7 +58,7 @@ function CheckoutPage() {
     const products: OrderProduct[] = itemsToRender.map((item) => ({
       slug: item.product.slug.current,
       quantity: item.quantity,
-      id: ""
+      id: "",
     }));
 
     return {
@@ -69,17 +70,16 @@ function CheckoutPage() {
       postalCode: form.postalcode,
       paymentMethod: form.paymentMethod,
       products,
-      clerkUserId: null,
+      clerkUserId: user!.id,
     };
   };
 
   const handlePlaceOrder = async (checkoutFormData: CheckoutFormType) => {
-    console.log("here")
+    console.log("here");
     try {
-          console.log("item:  ...", itemsToRender)
-
+      setLoading(true);
       const orderData = transformToOrderDTO(checkoutFormData);
-      console.log("orderDatatoPush: ", orderData)
+      console.log("orderDatatoPush: ", orderData);
 
       const response = await fetch("/api/place-order", {
         method: "POST",
@@ -97,11 +97,9 @@ function CheckoutPage() {
       }
 
       const result = await response.json();
-      // console.log("Order placed successfully:", result);
-      toast.success("Order placed!");
-      resetCart();
-      clearBuyNowItem();
-      router.push("/success");
+      console.log("Order placed successfully:", result);
+      toast.success(`Order: ${result.orderNumber} placed!`);
+      router.replace(`/success?orderNumber=${result.orderNumber}`);
     } catch (error) {
       // console.error("Network or unexpected error:", error);
       toast.error("Something went wrong!");
