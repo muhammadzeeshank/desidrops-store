@@ -141,7 +141,7 @@ function CheckoutPage() {
                   <Button
                     onClick={() => formRef.current?.submit()}
                     className="w-full cursor-pointer font-semibold tracking-wide"
-                    disabled={!isFormValid}
+                    disabled={loading}
                   >
                     {loading ? "Processing" : "Complete Order"}
                   </Button>
