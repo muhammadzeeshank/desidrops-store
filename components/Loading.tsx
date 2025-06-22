@@ -7,7 +7,7 @@ const Loading = () => {
   return (
     <div className="fixed min-h-screen w-full bg-background left-0 top-0 flex items-center justify-center">
       <div className="flex flex-col justify-center items-center gap-1">
-        <Logo>Desi Drops</Logo>
+        <Logo>Desi Home</Logo>
         <motion.div
           animate={{ scale: [1, 1.1, 1] }}
           transition={{ repeat: Infinity, duration: 1.5 }}
@@ -15,7 +15,7 @@ const Loading = () => {
         >
           <Loader2 className="animate-spin" />
           <span className="font-semibold tracking-wide">
-            Desi Drops is loading...
+            Desi Home is loading...
           </span>
         </motion.div>
       </div>

@@ -31,7 +31,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items }) => {
         className="min-w-72 max-w-96 bg-muted h-full text-primary-foreground p-10 border-r border-r-hoverColor/30 flex flex-col gap-6"
       >
         <div className="flex items-center justify-between">
-          <Logo className="text-foreground">Desi Drops</Logo>
+          <Logo className="text-foreground">Desi Home</Logo>
           <button
             onClick={onClose}
             className="hover:text-red-500 hoverEffect cursor-pointer text-foreground"

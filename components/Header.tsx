@@ -30,7 +30,7 @@ const Header = async () => {
         <HeaderMenu />
         <div className="w-auto md:w-1/3 flex items-center justify-center gap-2.5">
           <MobileMenu items={["Shop"]} />
-          <Logo>Desi Drops</Logo>
+          <Logo>Desi Home</Logo>
         </div>
         <div className="w-auto md:w-1/3 flex items-center justify-end gap-5">
           {/* <SearchBar /> */}

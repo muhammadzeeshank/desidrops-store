@@ -8,7 +8,7 @@ const HomeBanner = () => {
         100% Organic Essentials
       </Title>
       <p className="text-sm text-center font-medium max-w-[480px] text-foreground/80">
-        Discover pure, chemical-free goodness with Desi Drops. Shop premium
+        Discover pure, chemical-free goodness with Desi Home. Shop premium
         organic products for a healthier lifestyle.
       </p>
     </div>

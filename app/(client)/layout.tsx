@@ -5,7 +5,7 @@ import { Toaster } from "react-hot-toast";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Desi Drops Store",
+  title: "Desi Home Store",
   description: "100% Raw oil store",
 };
 
