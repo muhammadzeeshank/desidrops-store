@@ -16,11 +16,8 @@ const SuccessPage = () => {
 
   useEffect(() => {
     if (orderNumber) {
-      console.log("clearcart");
       clearCart();
     } else {
-      console.log("push home");
-
       router.replace("/");
     }
   }, [orderNumber, clearCart, router]);
