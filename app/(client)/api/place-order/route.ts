@@ -45,38 +45,56 @@ export async function POST(req: NextRequest) {
     // Create a map for price lookup
     const priceMap = Object.fromEntries(
       sanityProducts.map((p) => {
-        const price = p.price;
-        const discount = p.discount ?? 0;
-        const discountedPrice = price - (price * discount) / 100;
+        const afterDiscountPrice = p.price;
+        const discountPercent = p.discount ?? 0;
+        const discountedAmount = (afterDiscountPrice * discountPercent) / 100;
+        const price = afterDiscountPrice + discountedAmount;
 
         return [
           p.slug.current,
           {
             price,
-            discountedPrice,
+            discountedAmount,
+            afterDiscountPrice,
           },
         ];
       })
     );
-
-    // calculate total price
-    const totalPrice = orderData.products.reduce((acc, item) => {
-      const price = priceMap[item.slug] || 0;
-      return acc + price.price * item.quantity;
+    // calculate Subtotal (Before Any Discounts)
+    const subTotal = orderData.products.reduce((acc, item) => {
+      const prices = priceMap[item.slug] || 0;
+      return acc + prices.price * item.quantity;
     }, 0);
 
-    // calculate discounted amount
-    const amountDiscount = orderData.products.reduce((acc, item) => {
-      const price = priceMap[item.slug] || 0;
-      return acc + price.discountedPrice * item.quantity;
+    // calculate standard discount amount
+    const standardDiscount = orderData.products.reduce((acc, item) => {
+      const prices = priceMap[item.slug] || 0;
+      return acc + prices.discountedAmount * item.quantity;
     }, 0);
+
+    // calculate Total Price (After standard Discounts)
+    const totalPriceBeforeCouponDiscount = orderData.products.reduce((acc, item) => {
+      const prices = priceMap[item.slug] || 0;
+      return acc + prices.afterDiscountPrice * item.quantity;
+    }, 0);
+
+    const couponDiscountAmount = 0;
+
+    // calculate Total Price (After All Discounts)
+    const totalPrice = totalPriceBeforeCouponDiscount - couponDiscountAmount;
+
+    // calculate Total Discount Amount
+    const totalDiscount = couponDiscountAmount + standardDiscount;
 
     // Create final order object
     const finalOrder = {
       ...orderData,
+      subTotal,
       orderNumber,
       totalPrice,
-      amountDiscount,
+      standardDiscount,
+      couponDiscountAmount,
+      totalDiscount,
       orderDate,
       status: "pending",
       currency: "PKR",
@@ -109,7 +127,10 @@ export async function createOrderInSanity(orderData: any) {
     customerName,
     customerEmail,
     currency,
-    amountDiscount,
+    subTotal,
+    standardDiscount,
+    couponDiscountAmount,
+    totalDiscount,
     totalPrice,
     products,
     status,
@@ -136,7 +157,10 @@ export async function createOrderInSanity(orderData: any) {
     customerName,
     email: customerEmail,
     currency,
-    amountDiscount,
+    subTotal,
+    standardDiscount,
+    couponDiscount: couponDiscountAmount,
+    totalDiscount,
     totalPrice,
     status,
     orderDate,
