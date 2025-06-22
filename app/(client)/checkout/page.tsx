@@ -5,6 +5,7 @@ import CheckoutForm, {
   CheckoutFormType,
 } from "@/components/CheckoutForm";
 import Container from "@/components/Container";
+import EmptyCart from "@/components/EmptyCart";
 import Loading from "@/components/Loading";
 import PriceFormatter from "@/components/PriceFormatter";
 import { Button } from "@/components/ui/button";
@@ -106,29 +107,6 @@ function CheckoutPage() {
     }
   };
 
-  // const handlePlaceOrder = async () => {
-  //   setLoading(true);
-  //   try {
-  //     console.log("user: ", user);
-  //     const metadata: Metadata = {
-  //       orderNumber: crypto.randomUUID(),
-  //       customerName: user?.fullName ?? "Unknown",
-  //       customerEmail: user?.emailAddresses[0]?.emailAddress ?? "Unknown",
-  //       clerkUserId: user!.id,
-  //     };
-
-  //     console.log("metadata: ", metadata);
-  //     const checkoutUrl = await createCheckoutSession(groupedItems, metadata);
-  //     if (checkoutUrl) {
-  //       window.location.href = checkoutUrl;
-  //     }
-  //   } catch (error) {
-  //     console.error("Error creating checkout session:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const formRef = useRef<CheckoutFormRef>(null);
   const handleValidityChange = (valid: boolean) => {
     setIsFormValid(valid);
@@ -139,6 +117,8 @@ function CheckoutPage() {
   if (!isClient) {
     return <Loading />;
   }
+
+  if (itemsToRender?.length == 0) return (<EmptyCart />);
 
   return (
     <div className="bg-muted pb-52 md:pb-10 flex-grow">
