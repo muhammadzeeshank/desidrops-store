@@ -1,17 +1,14 @@
-import Link from "next/link";
-import React from "react";
 // import { ClerkLoaded, SignedIn, UserButton } from "@clerk/nextjs";
 // import { auth, currentUser } from "@clerk/nextjs/server";
 import Container from "./Container";
 // import { getAllCategories, getMyOrders } from "@/sanity/helpers";
+import { ClerkLoaded, SignedIn, SignInButton, UserButton } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
+import CartIcon from "./CartIcon";
 import HeaderMenu from "./HeaderMenu";
 import Logo from "./Logo";
-import { ListOrdered } from "lucide-react";
-import CartIcon from "./CartIcon";
-import { ModeSwitcher } from "./ModeSwitcher";
-import { currentUser } from "@clerk/nextjs/server";
-import { ClerkLoaded, SignedIn, SignInButton, UserButton } from "@clerk/nextjs";
 import MobileMenu from "./MobileMenu";
+import { ModeSwitcher } from "./ModeSwitcher";
 // import MobileMenu from "./new/MobileMenu";
 // import SearchBar from "./new/SearchBar";
 

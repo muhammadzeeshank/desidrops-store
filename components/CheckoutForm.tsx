@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isValidPhoneNumber } from "libphonenumber-js";
 import {
   forwardRef,
   useEffect,
@@ -25,7 +26,6 @@ import { Textarea } from "./ui/textarea";
 export type CheckoutFormRef = {
   submit: () => void;
 };
-import { isValidPhoneNumber } from "libphonenumber-js";
 
 export const formSchema = z.object({
   email: z.string().email("Invalid email address"),
