@@ -1,8 +1,7 @@
 import { OrderDTO, OrderDTOSchema, OrderProduct } from "@/lib/schemas/place-order";
-import { NextRequest, NextResponse } from "next/server";
-import { backendClient } from "@/sanity/lib/backendClient";
 import { getProductsBySlugs } from "@/sanity/helpers";
-import { Product } from "@/sanity.types";
+import { backendClient } from "@/sanity/lib/backendClient";
+import { NextRequest, NextResponse } from "next/server";
 
 function generateOrderNumber(): string {
   // e.g. ORD-20240621-XYZ123

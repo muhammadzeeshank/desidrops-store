@@ -3,14 +3,9 @@ import BuyNowButton from "@/components/BuyNowButton";
 import Container from "@/components/Container";
 import ImageView from "@/components/ImageView";
 import PriceView from "@/components/PriceView";
-import { FormControl, FormLabel } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { getProductBySlug } from "@/sanity/helpers";
-import { Check, Heart, ScanHeart, Truck } from "lucide-react";
+import { Check, Heart, ScanHeart } from "lucide-react";
 import { notFound } from "next/navigation";
-import { FaRegQuestionCircle } from "react-icons/fa";
-import { FiShare2 } from "react-icons/fi";
-import { TbHealthRecognition, TbTruckDelivery } from "react-icons/tb";
 
 const ProductPage = async ({
   params,

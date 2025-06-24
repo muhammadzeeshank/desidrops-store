@@ -1,3 +1,12 @@
+import React from 'react'
+
+function OrdersPage() {
+  return (
+    <div>page</div>
+  )
+}
+
+export default OrdersPage
 // import Container from "@/components/Container";
 // import OrdersComponent from "@/components/OrdersComponent";
 // import { Button } from "@/components/ui/button";

@@ -1,12 +1,11 @@
-import React from "react";
+import { cn } from "@/lib/utils";
+import { FaFacebook } from "react-icons/fa";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { cn } from "@/lib/utils";
-import { FaFacebook, FaInstagram } from "react-icons/fa";
 
 interface Props {
   className?: string;

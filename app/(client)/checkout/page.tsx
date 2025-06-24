@@ -16,21 +16,17 @@ import useCartStore from "@/store";
 import { useUser } from "@clerk/nextjs";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 function CheckoutPage() {
   const {
-    deleteCartProduct,
     getTotalPrice,
     getItemCount,
     getSubTotalPrice,
     getBuyNowTotalPrice,
     getBuyNowSubTotalPrice,
-    clearBuyNowItem,
-    resetCart,
   } = useCartStore();
 
   const [loading, setLoading] = useState(false);
