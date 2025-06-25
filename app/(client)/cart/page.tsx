@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/tooltip";
 import { urlFor } from "@/sanity/lib/image";
 import useCartStore from "@/store";
-import { useAuth, useUser } from "@clerk/nextjs";
 import { Heart, ShoppingBag, Trash } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -30,10 +29,8 @@ const CartPage = () => {
     resetCart,
   } = useCartStore();
   const [isClient, setIsClient] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const groupedItems = useCartStore((state) => state.getGroupedItems());
-  const { isSignedIn } = useAuth();
-  const { user } = useUser();
   const router = useRouter();
 
   useEffect(() => {

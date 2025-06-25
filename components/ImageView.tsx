@@ -1,14 +1,13 @@
 "use client";
-import Image from "next/image";
-import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { ImageData } from "@/types";
-import { urlFor } from "@/sanity/lib/image";
 import {
   internalGroqTypeReferenceTo,
   SanityImageCrop,
   SanityImageHotspot,
 } from "@/sanity.types";
+import { urlFor } from "@/sanity/lib/image";
+import { AnimatePresence, motion } from "motion/react";
+import Image from "next/image";
+import { useState } from "react";
 interface Props {
   images?: Array<{
     asset?: {

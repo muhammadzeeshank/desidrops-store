@@ -5,9 +5,7 @@ import { isValidPhoneNumber } from "libphonenumber-js";
 import {
   forwardRef,
   useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
+  useImperativeHandle
 } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -54,7 +52,6 @@ type Props = {
 
 const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
   ({ onSubmit, onValidityChange }, ref) => {
-    const formRef = useRef<HTMLFormElement>(null);
 
     const form = useForm<CheckoutFormType>({
       resolver: zodResolver(formSchema),
@@ -77,8 +74,6 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
       form.reset();
       form.clearErrors();
     }
-
-    const [isValid, setIsValid] = useState(false);
 
     useEffect(() => {
       const subscription = form.watch(() => {
@@ -409,4 +404,5 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
   }
 );
 
+CheckoutForm.displayName = "CheckoutForm";
 export default CheckoutForm;

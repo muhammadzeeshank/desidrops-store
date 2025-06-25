@@ -1,29 +1,39 @@
 import { z } from "zod";
 
-// export type OrderProduct = {
-//   id: string; // Sanity Product _id
-//   quantity: number;
-// };
-
-export type sanityOrderType = {
-  orderNumber: string;
-  customerName: string;
-  customerEmail: string;
-  currency: string;
-  amountDiscount?: number;
-  totalPrice: number;
-  products: OrderProduct[];
-  status?: "pending" | "paid" | "shipped" | "delivered" | "cancelled";
-  orderDate?: string;
-  clerkUserId?: string | null;
-};
-
-
 export const OrderProductSchema = z.object({
   id: z.string(),
   slug: z.string(),
   quantity: z.number().min(1),
 });
+
+export type OrderProduct = z.infer<typeof OrderProductSchema>;
+
+
+export type SanityOrderType = {
+  orderNumber: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string;
+  customerAddress?: string;
+  postalCode?: string;
+  city?: string;
+
+  currency: string;
+  subTotal: number;
+  standardDiscount?: number;
+  couponDiscountAmount?: number;
+  totalDiscount?: number;
+  totalPrice: number;
+
+  products: OrderProduct[];
+
+  status?: "pending" | "paid" | "shipped" | "delivered" | "cancelled";
+  orderDate?: string; 
+  clerkUserId?: string | null;
+};
+
+
+
 
 export const OrderDTOSchema = z.object({
   customerName: z.string(),
@@ -40,4 +50,3 @@ export const OrderDTOSchema = z.object({
 });
 
 export type OrderDTO = z.infer<typeof OrderDTOSchema>;
-export type OrderProduct = z.infer<typeof OrderProductSchema>;

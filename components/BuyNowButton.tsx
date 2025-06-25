@@ -5,7 +5,6 @@ import { Product } from "@/sanity.types";
 import useCartStore from "@/store";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { Button } from "./ui/button";
 
 interface Props {

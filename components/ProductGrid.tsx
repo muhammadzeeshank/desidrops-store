@@ -25,7 +25,7 @@ const ProductGrid = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [query]);
 
   return (
     <div className="mt-10 flex flex-col items-center">

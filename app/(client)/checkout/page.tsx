@@ -39,7 +39,6 @@ function CheckoutPage() {
     ? getBuyNowSubTotalPrice() - getBuyNowTotalPrice()
     : getSubTotalPrice() - getTotalPrice();
   const { user } = useUser();
-  const [isFormValid, setIsFormValid] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const searchParams = useSearchParams();
   const from = searchParams.get("from");
@@ -98,14 +97,15 @@ function CheckoutPage() {
       toast.success(`Order: ${result.orderNumber} placed!`);
       router.replace(`/success?orderNumber=${result.orderNumber}`);
     } catch (error) {
-      // console.error("Network or unexpected error:", error);
+      console.error("Network or unexpected error:", error);
       toast.error("Something went wrong!");
     }
   };
 
   const formRef = useRef<CheckoutFormRef>(null);
   const handleValidityChange = (valid: boolean) => {
-    setIsFormValid(valid);
+    console.log(valid)
+    // setIsFormValid(valid);
   };
   useEffect(() => {
     setIsClient(true);
