@@ -66,7 +66,7 @@ function CheckoutPage() {
       postalCode: form.postalcode,
       paymentMethod: form.paymentMethod,
       products,
-      clerkUserId: user!.id,
+      clerkUserId: user?.id,
     };
   };
 
