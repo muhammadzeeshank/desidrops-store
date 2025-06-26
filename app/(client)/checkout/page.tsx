@@ -101,9 +101,9 @@ function CheckoutPage() {
   };
 
   const formRef = useRef<CheckoutFormRef>(null);
-  const handleValidityChange = (valid: boolean) => {
-    // setIsFormValid(valid);
-  };
+  // const handleValidityChange = (valid: boolean) => {
+  //   // setIsFormValid(valid);
+  // };
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -129,7 +129,7 @@ function CheckoutPage() {
                   <CheckoutForm
                     ref={formRef}
                     onSubmit={handlePlaceOrder}
-                    onValidityChange={handleValidityChange}
+                    // onValidityChange={handleValidityChange}
                   />
                   <Button
                     onClick={() => formRef.current?.submit()}
