@@ -46,7 +46,7 @@ export const OrderConfirmationTemplate: React.FC<OrderConfirmationEmailTemplateP
     <p style={{ fontSize: "16px", marginBottom: "16px" }}>
       Hi <strong>{customerName}</strong>,
       <br />
-      We've received your order and it's being processed.
+      We&apos;ve received your order and it&apos;s being processed.
     </p>
 
     <div
