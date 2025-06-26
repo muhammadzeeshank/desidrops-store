@@ -39,6 +39,7 @@ const BuyNowButton = ({ product, className }: Props) => {
       <Button
         onClick={handleCheckout}
         disabled={isOutOfStock}
+        size={'lg'}
         className={cn(
           "w-full bg-primary text-background shadow-none border border-foreground/30 font-semibold tracking-wide hover:text-background cursor-pointer hoverEffect",
           className
