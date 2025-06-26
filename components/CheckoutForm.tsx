@@ -240,7 +240,7 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
               control={form.control}
               name="city"
               render={({ field }) => (
-                <FormItem className="col-span-12 @3xl:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
+                <FormItem className="col-span-12 @3xl:col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
                   <FormLabel className="flex shrink-0">City</FormLabel>
 
                   <div className="w-full">
@@ -263,7 +263,7 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="postalcode"
               render={({ field }) => (
@@ -289,7 +289,7 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
                   </div>
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="phone"
