@@ -1,6 +1,16 @@
+import {
+  EmailOrderProduct,
+  OrderConfirmationEmailTemplateProps,
+} from "@/components/emails/order-confirmation-template";
+import { sendOrderConfirmationEmail } from "@/lib/mail";
 import { createOrderInSanity } from "@/lib/sanity/create-order";
-import { OrderDTO, OrderDTOSchema, SanityOrderType } from "@/lib/schemas/place-order";
+import {
+  OrderDTO,
+  OrderDTOSchema,
+  SanityOrderType,
+} from "@/lib/schemas/place-order";
 import { getProductsBySlugs } from "@/sanity/helpers";
+import { urlFor } from "@/sanity/lib/image";
 import { NextRequest, NextResponse } from "next/server";
 
 function generateOrderNumber(): string {
@@ -14,7 +24,7 @@ export async function POST(req: NextRequest) {
   try {
     console.log("place order called");
     const body = await req.json();
-    console.log('body: ', body)
+    console.log("body: ", body);
     const parsed = OrderDTOSchema.safeParse(body);
 
     if (!parsed.success) {
@@ -38,7 +48,7 @@ export async function POST(req: NextRequest) {
 
     orderData.products = orderData.products.map((p) => ({
       ...p,
-      id: slugToIdMap[p.slug] || "", 
+      id: slugToIdMap[p.slug] || "",
     }));
 
     // Create a map for price lookup
@@ -72,10 +82,13 @@ export async function POST(req: NextRequest) {
     }, 0);
 
     // calculate Total Price (After standard Discounts)
-    const totalPriceBeforeCouponDiscount = orderData.products.reduce((acc, item) => {
-      const prices = priceMap[item.slug] || 0;
-      return acc + prices.afterDiscountPrice * item.quantity;
-    }, 0);
+    const totalPriceBeforeCouponDiscount = orderData.products.reduce(
+      (acc, item) => {
+        const prices = priceMap[item.slug] || 0;
+        return acc + prices.afterDiscountPrice * item.quantity;
+      },
+      0
+    );
 
     const couponDiscountAmount = 0;
 
@@ -99,7 +112,45 @@ export async function POST(req: NextRequest) {
       currency: "PKR",
     };
 
-    await createOrderInSanity(finalOrder);
+    const order = await createOrderInSanity(finalOrder);
+
+    const products: EmailOrderProduct[] = sanityProducts.map((product) => ({
+      name: product.name || "Unnamed Product",
+      quantity: finalOrder.products.find((x) => x.id == product._id)?.quantity || 1,
+      price: product.price || 0,
+      imageUrl: product.images?.[0]
+        ? urlFor(product.images[0]).width(100).height(100).url()
+        : undefined,
+    }));
+
+    const orderInfoForEmail: OrderConfirmationEmailTemplateProps = {
+      orderNumber: finalOrder.orderNumber,
+      customerName: finalOrder.customerName,
+      customerAddress: finalOrder.customerAddress ?? "",
+      city: finalOrder.city ?? "",
+      subTotal: finalOrder.subTotal,
+      total: finalOrder.totalPrice,
+      discountAmount: finalOrder.totalDiscount ?? 0,
+      products,
+    };
+    // {
+    //         orderNumber: "ORD-123456",
+    //         customerName: "Zeeshan",
+    //         customerAddress: "123 Main Street",
+    //         city: "Lahore",
+    //         products: [
+    //           { name: "Product A", quantity: 2, price: 19.99 },
+    //           { name: "Product B", quantity: 1, price: 49.99 },
+    //         ],
+    //         subTotal: 89.97,
+    //         discountAmount: 10,
+    //         total: 79.97,
+    //       }
+    if (order)
+      await sendOrderConfirmationEmail(
+        finalOrder.customerEmail,
+        orderInfoForEmail
+      );
 
     return NextResponse.json(
       {
@@ -118,5 +169,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
-
