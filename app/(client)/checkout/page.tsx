@@ -71,11 +71,9 @@ function CheckoutPage() {
   };
 
   const handlePlaceOrder = async (checkoutFormData: CheckoutFormType) => {
-    console.log("here");
     try {
       setLoading(true);
       const orderData = transformToOrderDTO(checkoutFormData);
-      console.log("orderDatatoPush: ", orderData);
 
       const response = await fetch("/api/place-order", {
         method: "POST",
@@ -104,7 +102,6 @@ function CheckoutPage() {
 
   const formRef = useRef<CheckoutFormRef>(null);
   const handleValidityChange = (valid: boolean) => {
-    console.log(valid)
     // setIsFormValid(valid);
   };
   useEffect(() => {

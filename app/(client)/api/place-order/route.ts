@@ -24,7 +24,6 @@ export async function POST(req: NextRequest) {
   try {
     console.log("place order called");
     const body = await req.json();
-    console.log("body: ", body);
     const parsed = OrderDTOSchema.safeParse(body);
 
     if (!parsed.success) {
