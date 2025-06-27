@@ -111,11 +111,19 @@ export async function POST(req: NextRequest) {
       currency: "PKR",
     };
 
-    const order = await createOrderInSanity(finalOrder);
+    let order = null;
+    try {
+      order = await createOrderInSanity(finalOrder);
+    } catch (error: unknown) {
+      console.log("Unable to place sanity order");
+    }
+
+    console.log(`${order?._id} placed.`);
 
     const products: EmailOrderProduct[] = sanityProducts.map((product) => ({
       name: product.name || "Unnamed Product",
-      quantity: finalOrder.products.find((x) => x.id == product._id)?.quantity || 1,
+      quantity:
+        finalOrder.products.find((x) => x.id == product._id)?.quantity || 1,
       price: product.price || 0,
       imageUrl: product.images?.[0]
         ? urlFor(product.images[0]).width(100).height(100).url()
