@@ -121,7 +121,7 @@ function CheckoutPage() {
             <ShoppingBag className="h-6 w-6 text-foreground" />
             <h1 className="text-2xl font-semibold">checkout</h1>
           </div>
-          <div className="grid lg:grid-cols-3 md:gap-8">
+          <div className="grid lg:grid-cols-3 gap-8">
             {/* Checkout form start */}
             <div className="lg:col-span-2 rounded-lg">
               <div className="border bg-background rounded-md">
@@ -145,7 +145,7 @@ function CheckoutPage() {
             {/* Checkout form end */}
 
             <div className="lg:col-span-1">
-              <div className="hidden md:inline-block w-full bg-background p-6 rounded-lg border sticky top-16">
+              <div className="md:inline-block w-full bg-background p-6 rounded-lg border sticky top-16">
                 <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
                 <div className="border-b mb-4 bg-background ">
                   {itemsToRender?.map(({ product }) => {
@@ -166,7 +166,7 @@ function CheckoutPage() {
                                 width={300}
                                 height={300}
                                 loading="lazy"
-                                className="w-32 md:w-16 h-32 md:h-16 object-cover group-hover:scale-105 overflow-hidden transition-transform duration-500"
+                                className="w-20 md:w-16 h-20 md:h-16 object-cover group-hover:scale-105 overflow-hidden transition-transform duration-500"
                               />
                               {
                                 <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-semibold px-2 py-1 rounded-full shadow-md">
@@ -224,7 +224,7 @@ function CheckoutPage() {
               </div>
             </div>
             {/* Order summary mobile view */}
-            <div className="md:hidden fixed bottom-0 left-0 w-full bg-background pt-2">
+            {/* <div className="bottom-0 left-0 w-full bg-background pt-2 mt-10">
               <div className="bg-background p-4 rounded-lg border mx-4">
                 <h2 className="text-lg font-semibold mb-2">Order Summary</h2>
                 <div className="space-y-2">
@@ -264,7 +264,7 @@ function CheckoutPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </>
       </Container>
