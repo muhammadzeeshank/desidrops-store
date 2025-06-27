@@ -163,7 +163,7 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
               control={form.control}
               name="firstname"
               render={({ field }) => (
-                <FormItem className="col-span-12 @2xl:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
+                <FormItem className="col-span-12 @sm:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
                   <FormLabel className="flex shrink-0">First Name</FormLabel>
 
                   <div className="w-full">
@@ -190,7 +190,7 @@ const CheckoutForm = forwardRef<CheckoutFormRef, Props>(
               control={form.control}
               name="lastname"
               render={({ field }) => (
-                <FormItem className="col-span-12 @2xl:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
+                <FormItem className="col-span-12 @sm:col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
                   <FormLabel className="flex shrink-0">Last Name</FormLabel>
 
                   <div className="w-full">

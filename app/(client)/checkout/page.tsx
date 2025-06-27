@@ -114,16 +114,16 @@ function CheckoutPage() {
   if (itemsToRender?.length == 0) return (<EmptyCart />);
 
   return (
-    <div className="bg-muted pb-52 md:pb-10 flex-grow">
+    <div className="bg-muted pb-10 flex-grow">
       <Container>
         <>
           <div className="flex items-center gap-2 py-5">
             <ShoppingBag className="h-6 w-6 text-foreground" />
             <h1 className="text-2xl font-semibold">checkout</h1>
           </div>
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-2 gap-8">
             {/* Checkout form start */}
-            <div className="lg:col-span-2 rounded-lg">
+            <div className="lg:col-span-1 rounded-lg">
               <div className="border bg-background rounded-md">
                 <div className="p-6">
                   <CheckoutForm
@@ -166,7 +166,7 @@ function CheckoutPage() {
                                 width={300}
                                 height={300}
                                 loading="lazy"
-                                className="w-20 md:w-16 h-20 md:h-16 object-cover group-hover:scale-105 overflow-hidden transition-transform duration-500"
+                                className="w-16 h-16 object-cover group-hover:scale-105 overflow-hidden transition-transform duration-500"
                               />
                               {
                                 <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-semibold px-2 py-1 rounded-full shadow-md">
