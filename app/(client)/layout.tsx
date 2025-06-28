@@ -6,7 +6,8 @@ import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Desi Home Store",
-  description: "100% Raw oil store",
+  description:
+    "Discover the best organic oil for cooking at Desi Home Store — your trusted source for 100% natural and healthy cooking oil. Sourced from pure ingredients, our oils support a wholesome lifestyle. Shop now for the best and healthiest cooking oil in Pakistan.",
 };
 
 export default function RootLayout({
