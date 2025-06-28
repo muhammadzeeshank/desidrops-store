@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import useCartStore from "@/store";
 import { motion } from "framer-motion";
-import { Check, Home, Package } from "lucide-react";
+import { Check, Home } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -77,7 +77,7 @@ const SuccessPage = () => {
               Home
             </Link>
           </Button>
-          <Button
+          {/* <Button
             variant="outline"
             asChild
             className="font-semibold transition-all duration-300 cursor-pointer"
@@ -86,7 +86,7 @@ const SuccessPage = () => {
               <Package className="w-5 h-5" />
               Orders
             </Link>
-          </Button>
+          </Button> */}
         </div>
       </motion.div>
     </div>
