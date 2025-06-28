@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Separator } from "./ui/separator";
 import Logo from "./Logo";
 import Container from "./Container";
+import { ModeSwitcher } from "./ModeSwitcher";
 const footerLinks = [
   {
     title: "Home",
@@ -32,7 +33,8 @@ const Footer = () => {
     <div className="bg-background flex flex-col border-t">
       <footer>
         <div className="max-w-screen-xl mx-auto">
-          <div className="py-12 flex flex-col justify-start items-center">
+          <div className="pb-12 pt-8 flex flex-col justify-start items-center">
+            <ModeSwitcher />
             <Logo>Desi Home</Logo>
             <ul className="mt-6 flex items-center justify-center gap-4 flex-wrap">
               {footerLinks.map(({ title, href }) => (

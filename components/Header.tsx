@@ -8,7 +8,8 @@ import CartIcon from "./CartIcon";
 import HeaderMenu from "./HeaderMenu";
 import Logo from "./Logo";
 import MobileMenu from "./MobileMenu";
-import { ModeSwitcher } from "./ModeSwitcher";
+import { FaUser } from "react-icons/fa";
+import { User } from "lucide-react";
 // import MobileMenu from "./new/MobileMenu";
 // import SearchBar from "./new/SearchBar";
 
@@ -49,12 +50,12 @@ const Header = async () => {
             {!user && (
               <SignInButton mode="modal">
                 <div className="cursor-pointer text-sm font-semibold text-foreground/70 hover:text-foreground hoverEffect">
-                  Login
+                  <User className="h-5 w-5"/>
                 </div>
               </SignInButton>
             )}
           </ClerkLoaded>
-          <ModeSwitcher />
+          
         </div>
       </Container>
     </header>
