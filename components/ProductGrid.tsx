@@ -16,7 +16,6 @@ const ProductGrid = () => {
       setLoading(true);
       try {
         const response = await client.fetch(query);
-        console.log(response)
         setProducts(response);
       } catch (error) {
         console.log("Product fetching Error", error);

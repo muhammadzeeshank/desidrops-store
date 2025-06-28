@@ -5,15 +5,34 @@ import ImageView from "@/components/ImageView";
 import PriceView from "@/components/PriceView";
 import { getProductBySlug } from "@/sanity/helpers";
 import { Check, Heart, ScanHeart } from "lucide-react";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 
-const ProductPage = async ({
-  params,
-}: {
+interface PageProps {
   params: Promise<{ slug: string }>;
-}) => {
+}
+
+// Cache data to avoid multiple DB calls since it's used in both generateMetadata and the component
+const getProductData = cache(getProductBySlug);
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  // IMPORTANT FOR SEO
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const productSlugDecoded = decodeURIComponent(slug);
+  const product = await getProductData(productSlugDecoded);
+
+  return {
+    title: product?.name,
+    description: product?.description
+  };
+}
+
+const ProductPage = async ({ params }: PageProps) => {
+  const { slug } = await params;
+  const product = await getProductData(slug);
 
   if (!product) {
     return notFound();
