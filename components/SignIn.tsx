@@ -56,8 +56,13 @@ export default function SignIn() {
       });
 
       setStep("verify");
-    } catch (err: any) {
-      setError(err.errors?.[0]?.message || "Failed to send verification code");
+    } catch (err: unknown) {
+      let message = "An unknown error occurred";
+
+      if (err instanceof Error) {
+        message = err?.message;
+      }
+      setError(message || "Failed to send verification code");
     }
   };
 
@@ -76,8 +81,13 @@ export default function SignIn() {
       } else {
         setError("Verification incomplete");
       }
-    } catch (err: any) {
-      setError(err.errors?.[0]?.message || "Invalid code");
+    } catch (err: unknown) {
+      let message = "An unknown error occurred";
+
+      if (err instanceof Error) {
+        message = err?.message;
+        setError(message || "Invalid code");
+      }
     }
   };
 

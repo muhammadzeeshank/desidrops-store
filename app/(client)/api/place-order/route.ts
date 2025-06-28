@@ -115,7 +115,13 @@ export async function POST(req: NextRequest) {
     try {
       order = await createOrderInSanity(finalOrder);
     } catch (error: unknown) {
-      console.log("Unable to place sanity order");
+      let message = "An unknown error occurred";
+
+      if (error instanceof Error) {
+        message = error.message;
+      }
+
+      console.error("Unable to place sanity order:", message);
     }
 
     console.log(`${order?._id} placed.`);
