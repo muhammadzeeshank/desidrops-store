@@ -8,23 +8,23 @@ import { ModeSwitcher } from "./ModeSwitcher";
 const footerLinks = [
   {
     title: "Home",
-    href: "#",
+    href: "/",
   },
   {
     title: "Contact Us",
-    href: "#",
+    href: "/contact",
   },
   {
     title: "About Us",
-    href: "#",
+    href: "/about",
   },
   {
     title: "Privacy Policy",
-    href: "#",
+    href: "/privacy-policy",
   },
   {
     title: "Return Policy",
-    href: "#",
+    href: "/return-policy",
   },
 ];
 
