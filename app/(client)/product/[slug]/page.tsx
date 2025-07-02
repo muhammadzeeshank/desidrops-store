@@ -1,6 +1,7 @@
 import AddToCartButton from "@/components/AddToCartButton";
 import BuyNowButton from "@/components/BuyNowButton";
 import Container from "@/components/Container";
+import CustomizedAccordion from "@/components/CustomizedAccordion";
 import ImageView from "@/components/ImageView";
 import PriceView from "@/components/PriceView";
 import Section from "@/components/Section";
@@ -32,19 +33,6 @@ export async function generateMetadata({
     description: product?.description,
   };
 }
-
-// TODO: Add these to db
-const benefits = [
-  "Promotes heart health with healthy unsaturated fats.",
-  "Rich source of Omega-3 and Omega-6 fatty acids.",
-  "Supports cholesterol balance naturally.",
-  "Cold-pressed without chemicals or high heat.",
-  "Contains antioxidants like Vitamin E for skin & immunity.",
-  "Low in saturated fat, ideal for everyday cooking.",
-  "High smoke point makes it great for frying and grilling.",
-  "No artificial preservatives or additives.",
-  "Suitable for both desi and western dishes.",
-];
 
 const ProductPage = async ({ params }: PageProps) => {
   const { slug } = await params;
@@ -127,59 +115,45 @@ const ProductPage = async ({ params }: PageProps) => {
             </div>
           </div>
         </div>
-        <Section title="Health Benefits of Organic Canola Oil">
-          <div className="flex flex-col md:flex-row items-center gap-10">
-            {/* Image */}
-            <div className="md:w-1/2 w-full relative h-72 md:h-[400px]">
-              <Image
-                src={urlFor(product?.images[0]).url()} // Replace with actual image path
-                alt="Organic Canola Oil Bottle"
-                fill
-                className="object-cover rounded-2xl shadow-md"
-                priority
-              />
-            </div>
+        {!product?.benefitsHeading?.trim() ||
+          product?.benefits == undefined ||
+          product?.benefits?.length <= 0 || (
+            <Section title={product.benefitsHeading}>
+              <div className="flex flex-col md:flex-row items-center gap-10">
+                {/* Image */}
+                <div className="md:w-1/2 w-full relative h-72 md:h-[400px]">
+                  <Image
+                    src={urlFor(product?.images[0]).url()} // Replace with actual image path
+                    alt="Organic Canola Oil Bottle"
+                    fill
+                    className="object-cover rounded-2xl shadow-md"
+                    priority
+                  />
+                </div>
 
-            {/* Text Content */}
-            <div className="md:w-1/2 w-full">
-              <ul className="space-y-4 text-foreground/80 text-base leading-relaxed">
-                {benefits.map((point, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <CheckCircle className="text-primary mt-1 w-5 h-5 shrink-0" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </Section>
-
-                <Section title="FAQ s">
-          <div className="flex flex-col md:flex-row items-center gap-10">
-            {/* Image */}
-            <div className="md:w-1/2 w-full relative h-72 md:h-[400px]">
-              <Image
-                src={urlFor(product?.images[0]).url()} // Replace with actual image path
-                alt="Organic Canola Oil Bottle"
-                fill
-                className="object-cover rounded-2xl shadow-md"
-                priority
-              />
-            </div>
-
-            {/* Text Content */}
-            <div className="md:w-1/2 w-full">
-              <ul className="space-y-4 text-foreground/80 text-base leading-relaxed">
-                {benefits.map((point, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <CheckCircle className="text-primary mt-1 w-5 h-5 shrink-0" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </Section>
+                {/* Text Content */}
+                <div className="md:w-1/2 w-full">
+                  <ul className="space-y-4 text-foreground/80 text-base leading-relaxed">
+                    {product.benefits.map((point: string, index: number) => (
+                      <li key={index} className="flex items-start gap-3">
+                        <CheckCircle className="text-primary mt-1 w-5 h-5 shrink-0" />
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </Section>
+          )}
+        {!product?.faqsHeading?.trim() ||
+          product?.faqItems == undefined ||
+          product?.faqItems?.length <= 0 || (
+            <Section title={product?.faqsHeading}>
+              <div className="flex justify-center items-center">
+                <CustomizedAccordion items={product.faqItems} />
+              </div>
+            </Section>
+          )}
       </Container>
     </div>
   );

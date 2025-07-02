@@ -81,10 +81,39 @@ export const productType = defineType({
       title: "Product Weight",
       type: "string",
       options: {
-        list: [
-          { title: "1 liter", value: "1-liter" },
-        ],
+        list: [{ title: "1 liter", value: "1-liter" }],
       },
+    }),
+    defineField({
+      name: "benefitsHeading",
+      title: "Benefits Heading",
+      type: "string",
+    }),
+
+    defineField({
+      name: "benefits",
+      title: "Benefits",
+      type: "array",
+      of: [{ type: "string" }],
+    }),
+    defineField({
+      name: "faqsHeading",
+      title: "FAQ's Heading",
+      type: "string",
+    }),
+    defineField({
+      name: "faqItems",
+      title: "FAQ Items",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          fields: [
+            { name: "title", title: "Title", type: "string" },
+            { name: "content", title: "Content", type: "text" },
+          ],
+        },
+      ],
     }),
   ],
   preview: {
