@@ -14,7 +14,7 @@ export const sendOrderConfirmationEmail = async (
   try {
     console.log("sending email");
     const { data, error } = await resend.emails.send({
-      from: "Acme <onboarding@resend.dev>",
+      from: "DesiHome <no-reply@desihome.pk>",
       to: [email],
       subject: `${orderInfo.customerName}, Your Order Has Been Confirmed`,
       react: React.createElement(OrderConfirmationTemplate, orderInfo),
